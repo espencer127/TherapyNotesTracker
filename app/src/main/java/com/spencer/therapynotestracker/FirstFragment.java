@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spencer.therapynotestracker.databinding.FragmentFirstBinding;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +29,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
 
     private FragmentFirstBinding binding;
 
-    private List<SessionModel> list;
+    private List<Session> list;
 
     private HomeViewModel homeViewModel;
 
@@ -38,7 +41,6 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-
         this.list = new ArrayList<>();
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
@@ -47,22 +49,35 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         ListView listView = contentView.findViewById(R.id.listview);
 
         homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
-        homeViewModel.setBins(list);
 
-        this.listAdapter = new NoteAdapter(homeViewModel.getBins().getValue(), container.getContext());
-        listView.setAdapter(listAdapter);
+        this.listAdapter = new NoteAdapter(homeViewModel.getSessions().getValue(), container.getContext());
+
+        homeViewModel.getSessions().observe(getViewLifecycleOwner(), new Observer<List<Session>>() {
+            @Override
+            public void onChanged(List<Session> dataList) {
+                if (listAdapter.items != null && !listAdapter.isEmpty()) {
+                    listAdapter.items.clear(); // Clear existing data
+                    if (dataList != null && !dataList.isEmpty())
+                        listAdapter.items.addAll(dataList); // Add new data
+                }
+                listAdapter.notifyDataSetChanged(); // Notify the adapter of the change
+            }
+        });
+
+
+
+        //this.list = homeViewModel.getSessions().getValue(); // new ArrayList<>();
+
+        listAdapter.notifyDataSetChanged();
+        
+         listView.setAdapter(listAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SessionModel clickedItem = (SessionModel) parent.getItemAtPosition(position);
+                Session clickedItem = (Session) parent.getItemAtPosition(position);
 
                 Toast.makeText(view.getContext(), "Clicked: " + clickedItem.getDate(), Toast.LENGTH_SHORT).show();
-
-                // You can also start a new activity, update UI, etc.
-                // Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                // intent.putExtra("item_data", clickedItem);
-                // startActivity(intent);
             }
         });
 
@@ -76,10 +91,10 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
 
         // Observe the LiveData. The onChanged() method is called when the data changes.
-        homeViewModel.getBins().observe(getViewLifecycleOwner(), bins -> {
+        homeViewModel.getSessions().observe(getViewLifecycleOwner(), sessions -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (homeViewModel.getBins().getValue().size() > 0)
-                    ((MainActivity) getActivity()).sendBinAlertNotification(bins);
+                if (homeViewModel.getSessions().getValue().size() > 0)
+                    ((MainActivity) getActivity()).sendBinAlertNotification(sessions);
             }
 
             listAdapter.notifyDataSetChanged();
@@ -96,7 +111,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.fab) {
-            List<SessionModel> newList = new ArrayList<>();
+            List<Session> newList = new ArrayList<>();
 
             //prompt for item
             promptForSession();
@@ -123,14 +138,22 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                SessionModel tempSession = new SessionModel();
-                tempSession.setDate(alertPromptDate.getText().toString());
-                tempSession.setAgenda(alertPromptAgenda.getText().toString());
-                tempSession.setNotes(alertPromptNotes.getText().toString());
+                Session tempSession = new Session
+                (alertPromptDate.getText().toString(),
+                alertPromptAgenda.getText().toString(),
+                alertPromptNotes.getText().toString());
                 list.add(tempSession);
+
+
+                Session session = new Session(tempSession.getDate(), tempSession.getAgenda(), tempSession.getNotes());
+                homeViewModel.insert(session);
+
+
                 listAdapter.notifyDataSetChanged();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     ((MainActivity) getActivity()).sendBinAlertNotification(list);
+                    Log.d("First Fragment", homeViewModel.getSessions().getValue().toString());
+
                 }
             }
         });

@@ -11,11 +11,11 @@ import android.widget.TextView;
 import java.util.List;
 
 public class NoteAdapter extends BaseAdapter {
-    List<SessionModel> items;
+    List<Session> items;
 
     private Context context;
 
-    public NoteAdapter(List<SessionModel> items, Context context) {
+    public NoteAdapter(List<Session> items, Context context) {
         super();
         this.items = items;
         this.context = context;
@@ -23,7 +23,10 @@ public class NoteAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return items.size();
+        if (items != null && !items.isEmpty())
+            return items.size();
+        else
+            return 0;
     }
 
     @Override
