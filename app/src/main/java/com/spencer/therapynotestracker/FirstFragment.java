@@ -4,21 +4,17 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spencer.therapynotestracker.databinding.FragmentFirstBinding;
@@ -56,6 +52,20 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         this.listAdapter = new NoteAdapter(homeViewModel.getBins().getValue(), container.getContext());
         listView.setAdapter(listAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SessionModel clickedItem = (SessionModel) parent.getItemAtPosition(position);
+
+                Toast.makeText(view.getContext(), "Clicked: " + clickedItem.getDate(), Toast.LENGTH_SHORT).show();
+
+                // You can also start a new activity, update UI, etc.
+                // Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                // intent.putExtra("item_data", clickedItem);
+                // startActivity(intent);
+            }
+        });
+
         enterButton = contentView.findViewById(R.id.fab);
         enterButton.setOnClickListener(this);
 
@@ -89,7 +99,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
             List<SessionModel> newList = new ArrayList<>();
 
             //prompt for item
-            promptForString();
+            promptForSession();
 
             homeViewModel.addItems(newList);
 
@@ -98,9 +108,9 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void promptForString() {
+    private void promptForSession() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-        builder.setTitle("Enter alert quantity");
+        builder.setTitle("Enter Session Details");
 
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogueView = inflater.inflate(R.layout.alert_session_prompt, null);
