@@ -1,13 +1,22 @@
 package com.spencer.therapynotestracker;
 
+import android.Manifest;
+import android.app.PendingIntent;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
-
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
-
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -17,11 +26,17 @@ import com.spencer.therapynotestracker.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+
+    private final int REQUEST_POST_NOTIFICATION_STATE_PERMISSION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +47,16 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
+        NotificationChannelHelper.createNotificationChannel(this);
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAnchorView(R.id.fab)
-                        .setAction("Action", null).show();
-            }
-        });
+//        if (ContextCompat.checkSelfPermission(RegisterActivity.this,      Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_POST_NOTIFICATION_STATE_PERMISSION);
+//        }
     }
 
     @Override
@@ -74,4 +87,77 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public void sendBinAlertNotification(List<String> bins) {
+
+        // Create an explicit intent for an Activity in your app.
+        Intent intent = new Intent(this, AlertDetails.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, REQUEST_POST_NOTIFICATION_STATE_PERMISSION, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BIN_ALERT_CHANNEL")
+                .setSmallIcon(R.drawable.ic_alert)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_alert))
+                .setContentTitle("Adding Numbers")
+                .setContentText("We're adding numbers!")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setStyle(new NotificationCompat.BigPictureStyle()
+                        .bigPicture(BitmapFactory.decodeResource(getResources(), R.drawable.ic_alert))
+                        .setBigContentTitle("This is Big Notification"))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.POST_NOTIFICATIONS)) {
+                showExplanation("Permission Needed", "Rationale", Manifest.permission.READ_PHONE_STATE, REQUEST_POST_NOTIFICATION_STATE_PERMISSION);
+            } else {
+                requestPermission(Manifest.permission.POST_NOTIFICATIONS, REQUEST_POST_NOTIFICATION_STATE_PERMISSION);
+            }
+            //return;
+        } else {
+            Toast.makeText(MainActivity.this, "Permission (already) Granted!", Toast.LENGTH_SHORT).show();
+        }
+        NotificationManagerCompat.from(this).notify(REQUEST_POST_NOTIFICATION_STATE_PERMISSION, builder.build());
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            String permissions[],
+            int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_POST_NOTIFICATION_STATE_PERMISSION:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(MainActivity.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+        }
+    }
+
+    private void showExplanation(String title,
+                                 String message,
+                                 final String permission,
+                                 final int permissionRequestCode) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        requestPermission(permission, permissionRequestCode);
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void requestPermission(String permissionName, int permissionRequestCode) {
+        ActivityCompat.requestPermissions(this,
+                new String[]{permissionName}, permissionRequestCode);
+    }
+
 }
