@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 requestPermission(Manifest.permission.POST_NOTIFICATIONS, REQUEST_POST_NOTIFICATION_STATE_PERMISSION);
             }
-            //return;
         } else {
             Toast.makeText(MainActivity.this, "Permission (already) Granted!", Toast.LENGTH_SHORT).show();
         }
