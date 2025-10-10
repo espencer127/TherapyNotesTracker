@@ -6,11 +6,27 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/alertSessionPrompt"
+        android:id="@+id/alertSessionDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter session date..."
+        android:hint="Enter session date"
         android:inputType="text"
         android:contentDescription="Session Date"/>
+
+    <EditText
+        android:id="@+id/alertSessionAgenda"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter session agenda"
+        android:inputType="text"
+        android:contentDescription="Session Agenda"/>
+
+    <EditText
+        android:id="@+id/alertSessionNotes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter session notes"
+        android:inputType="text"
+        android:contentDescription="Session Notes"/>
 
 </LinearLayout>

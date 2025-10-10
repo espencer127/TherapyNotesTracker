@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -29,7 +28,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.List;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -89,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    public void sendBinAlertNotification(List<String> bins) {
+    public void sendBinAlertNotification(List<SessionModel> bins) {
 
         // Create an explicit intent for an Activity in your app.
         Intent intent = new Intent(this, AlertDetails.class);

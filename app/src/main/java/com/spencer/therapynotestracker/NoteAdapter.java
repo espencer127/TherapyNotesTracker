@@ -11,11 +11,11 @@ import android.widget.TextView;
 import java.util.List;
 
 public class NoteAdapter extends BaseAdapter {
-    List<String> items;
+    List<SessionModel> items;
 
     private Context context;
 
-    public NoteAdapter(List<String> items, Context context) {
+    public NoteAdapter(List<SessionModel> items, Context context) {
         super();
         this.items = items;
         this.context = context;
@@ -39,7 +39,7 @@ public class NoteAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         TextView textView = new TextView(context);
-        textView.setText(items.get(i));
+        textView.setText(items.get(i).getDate() + " " + items.get(i).getAgenda() + " " + items.get(i).getNotes());
         return textView;
     }
 

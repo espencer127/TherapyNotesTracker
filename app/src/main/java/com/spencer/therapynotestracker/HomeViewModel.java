@@ -7,24 +7,24 @@ import java.util.List;
 
 public class HomeViewModel extends ViewModel {
 
-    private final MutableLiveData<List<String>> binsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<SessionModel>> binsLiveData = new MutableLiveData<>();
 
-    public void setBins(List<String> bins) {
+    public void setBins(List<SessionModel> bins) {
         binsLiveData.setValue(bins);
     }
 
-    public LiveData<List<String>> getBins() {
+    public LiveData<List<SessionModel>> getBins() {
         return binsLiveData;
     }
 
-    public void addItem(String item) {
-        List<String> temp = binsLiveData.getValue();
+    public void addItem(SessionModel item) {
+        List<SessionModel> temp = binsLiveData.getValue();
         temp.add(item);
         binsLiveData.setValue(temp);
     }
 
-    public void addItems(List<String> items) {
-        List<String> temp = binsLiveData.getValue();
+    public void addItems(List<SessionModel> items) {
+        List<SessionModel> temp = binsLiveData.getValue();
 
         for (int i=0; i<items.size();i++) {
             temp.add(items.get(i));

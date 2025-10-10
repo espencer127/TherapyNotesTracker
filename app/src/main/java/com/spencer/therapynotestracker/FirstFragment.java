@@ -30,7 +30,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
 
     private FragmentFirstBinding binding;
 
-    private List<String> list;
+    private List<SessionModel> list;
 
     private HomeViewModel homeViewModel;
 
@@ -86,7 +86,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.fab) {
-            List<String> newList = new ArrayList<>();
+            List<SessionModel> newList = new ArrayList<>();
 
             //prompt for item
             promptForString();
@@ -106,12 +106,22 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         View dialogueView = inflater.inflate(R.layout.alert_session_prompt, null);
         builder.setView(dialogueView);
 
-        final EditText alertPromptText = dialogueView.findViewById(R.id.alertSessionPrompt);
+        final EditText alertPromptDate = dialogueView.findViewById(R.id.alertSessionDate);
+        final EditText alertPromptAgenda = dialogueView.findViewById(R.id.alertSessionAgenda);
+        final EditText alertPromptNotes = dialogueView.findViewById(R.id.alertSessionNotes);
 
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                homeViewModel.addItem(alertPromptText.getText().toString());
+                SessionModel tempSession = new SessionModel();
+                tempSession.setDate(alertPromptDate.getText().toString());
+                tempSession.setAgenda(alertPromptAgenda.getText().toString());
+                tempSession.setNotes(alertPromptNotes.getText().toString());
+                list.add(tempSession);
+                listAdapter.notifyDataSetChanged();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    ((MainActivity) getActivity()).sendBinAlertNotification(list);
+                }
             }
         });
 
