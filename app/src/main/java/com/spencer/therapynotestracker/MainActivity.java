@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, REQUEST_POST_NOTIFICATION_STATE_PERMISSION, intent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BIN_ALERT_CHANNEL")
+                .setChannelId(NotificationChannelHelper.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_alert)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_alert))
                 .setContentTitle("Adding Numbers")
