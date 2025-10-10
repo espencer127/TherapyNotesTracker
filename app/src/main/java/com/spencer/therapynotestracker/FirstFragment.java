@@ -1,5 +1,6 @@
 package com.spencer.therapynotestracker;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
@@ -48,12 +49,10 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
 
         addItems(container, listView);
 
-
         enterButton = contentView.findViewById(R.id.fab);
         enterButton.setOnClickListener(this);
 
         return contentView;
-
     }
 
     public void addItems(ViewGroup container, ListView listView) {
@@ -74,7 +73,9 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
 
         // Observe the LiveData. The onChanged() method is called when the data changes.
         homeViewModel.getBins().observe(getViewLifecycleOwner(), bins -> {
-            ((MainActivity) getActivity()).sendBinAlertNotification(bins);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ((MainActivity) getActivity()).sendBinAlertNotification(bins);
+            }
 
             listAdapter.notifyDataSetChanged();
         });
