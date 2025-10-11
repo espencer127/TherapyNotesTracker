@@ -20,12 +20,6 @@ public class HomeViewModel extends AndroidViewModel {
         sessionsLiveData = mRepository.getAllSessions();
     }
 
-    public void setSessions(List<Session> sessions) {
-        for (Session session : sessions) {
-            insert(session);
-        }
-    }
-
     public LiveData<List<Session>> getSessions() {
         return sessionsLiveData;
     }

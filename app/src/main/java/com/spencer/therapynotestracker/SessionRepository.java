@@ -32,5 +32,6 @@ class SessionRepository {
         SessionRoomDatabase.databaseWriteExecutor.execute(() -> {
             mSessionDao.insert(session);
         });
+        mAllSessions = mSessionDao.getAlphabetizedSessions();
     }
 }

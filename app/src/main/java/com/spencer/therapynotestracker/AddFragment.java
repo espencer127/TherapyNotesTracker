@@ -34,11 +34,12 @@ public class AddFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
-        binding.listview.setOnClickListener(v ->
-                NavHostFragment.findNavController(AddFragment.this)
-                        .navigate(R.id.action_AddFragment_to_FirstFragment)
-        );
+
+        //TODO fix this?
+//        binding.listview.setOnClickListener(v ->
+//                NavHostFragment.findNavController(AddFragment.this)
+//                        .navigate(R.id.action_AddFragment_to_FirstFragment)
+//        );
 
     }
 

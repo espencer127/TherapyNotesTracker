@@ -53,5 +53,9 @@ public class Session {
         return this.notes;
     }
 
+    public String toString() {
+        return " " + this.date + " " + this.agenda + " " + this.notes;
+    }
+
 
 }

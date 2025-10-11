@@ -8,20 +8,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spencer.therapynotestracker.databinding.FragmentFirstBinding;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,52 +33,37 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
 
     private HomeViewModel homeViewModel;
 
-    private NoteAdapter listAdapter;
     FloatingActionButton enterButton;
+
+    private SessionAdapter sessionAdapter;
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        this.list = new ArrayList<>();
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
         View contentView = inflater.inflate(R.layout.fragment_first, container, false);
-        ListView listView = contentView.findViewById(R.id.listview);
 
         homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
-        this.listAdapter = new NoteAdapter(homeViewModel.getSessions().getValue(), container.getContext());
+        //RecyclerView recyclerView = binding.binRecyclerView;
+        //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //recyclerView.setAdapter(this.sessionAdapter);
 
-        homeViewModel.getSessions().observe(getViewLifecycleOwner(), new Observer<List<Session>>() {
-            @Override
-            public void onChanged(List<Session> dataList) {
-                if (listAdapter.items != null && !listAdapter.isEmpty()) {
-                    listAdapter.items.clear(); // Clear existing data
-                    if (dataList != null && !dataList.isEmpty())
-                        listAdapter.items.addAll(dataList); // Add new data
-                }
-                listAdapter.notifyDataSetChanged(); // Notify the adapter of the change
-            }
-        });
+        // Add gray divider between items
+        //DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        //divider.setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.recycler_divider));
+        //recyclerView.addItemDecoration(divider);
 
+        // Observe LiveData bins
+        homeViewModel.getSessions().observe(getViewLifecycleOwner(), sessions -> {
+            // Update adapter
+            sessionAdapter.updateBins(sessions);
 
-
-        //this.list = homeViewModel.getSessions().getValue(); // new ArrayList<>();
-
-        listAdapter.notifyDataSetChanged();
-        
-         listView.setAdapter(listAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Session clickedItem = (Session) parent.getItemAtPosition(position);
-
-                Toast.makeText(view.getContext(), "Clicked: " + clickedItem.getDate(), Toast.LENGTH_SHORT).show();
-            }
+            Log.d("First Fragment ln 81", sessionAdapter.getSessions().toString());
         });
 
         enterButton = contentView.findViewById(R.id.fab);
@@ -87,19 +72,36 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         return contentView;
     }
 
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(View view,
+                              Bundle savedInstanceState)
+    {
         super.onViewCreated(view, savedInstanceState);
 
-        // Observe the LiveData. The onChanged() method is called when the data changes.
-        homeViewModel.getSessions().observe(getViewLifecycleOwner(), sessions -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (homeViewModel.getSessions().getValue().size() > 0)
-                    ((MainActivity) getActivity()).sendBinAlertNotification(sessions);
-            }
+        // getting the employeelist
+        this.list = new ArrayList<>();
 
-            listAdapter.notifyDataSetChanged();
-        });
+        Session testSesh = new Session("date666", "agenda666", "notes666");
+        List<Session> seshList = new ArrayList<>();
+        seshList.add(testSesh);
 
+        // Assign employeelist to ItemAdapter
+        sessionAdapter = new SessionAdapter(homeViewModel.getSessions().getValue());
+
+
+        // Set the LayoutManager that
+        // this RecyclerView will use.
+        RecyclerView recyclerView = view.findViewById(R.id.binRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // adapter instance is set to the
+        // recyclerview to inflate the items.
+        recyclerView.setAdapter(sessionAdapter);
+
+        // Add gray divider between items
+        DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        divider.setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.recycler_divider));
+        recyclerView.addItemDecoration(divider);
     }
 
     @Override
@@ -111,15 +113,8 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.fab) {
-            List<Session> newList = new ArrayList<>();
-
-            //prompt for item
-            promptForSession();
-
-            homeViewModel.addItems(newList);
-
             Toast.makeText(v.getContext(), "Add Button Clicked!", Toast.LENGTH_SHORT).show();
-            // Add more cases for other buttons if needed
+            promptForSession();
         }
     }
 
@@ -138,22 +133,21 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                Log.d("Home View Model ln 137", sessionAdapter.getSessions().toString());
+
                 Session tempSession = new Session
                 (alertPromptDate.getText().toString(),
                 alertPromptAgenda.getText().toString(),
                 alertPromptNotes.getText().toString());
                 list.add(tempSession);
 
-
                 Session session = new Session(tempSession.getDate(), tempSession.getAgenda(), tempSession.getNotes());
                 homeViewModel.insert(session);
 
-
-                listAdapter.notifyDataSetChanged();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     ((MainActivity) getActivity()).sendBinAlertNotification(list);
-                    Log.d("First Fragment", homeViewModel.getSessions().getValue().toString());
-
+                    Log.d("First Fragment Ln 155", sessionAdapter.getSessions().toString());
                 }
             }
         });
