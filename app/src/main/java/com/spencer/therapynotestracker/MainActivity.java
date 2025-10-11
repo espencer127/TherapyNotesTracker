@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    public void sendBinAlertNotification(List<SessionModel> bins) {
+    public void sendBinAlertNotification(List<Session> bins) {
 
         // Create an explicit intent for an Activity in your app.
         Intent intent = new Intent(this, AlertDetails.class);

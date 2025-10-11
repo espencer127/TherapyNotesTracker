@@ -4,34 +4,38 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spencer.therapynotestracker.databinding.FragmentFirstBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class FirstFragment extends Fragment implements View.OnClickListener {
+public class FirstFragment extends Fragment implements View.OnClickListener, SelectListener {
 
     private FragmentFirstBinding binding;
 
-    private List<SessionModel> list;
+    private List<Session> list;
 
     private HomeViewModel homeViewModel;
 
-    private NoteAdapter listAdapter;
     FloatingActionButton enterButton;
+
+    private SessionAdapter sessionAdapter;
 
     @Override
     public View onCreateView(
@@ -39,31 +43,16 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
             Bundle savedInstanceState
     ) {
 
-        this.list = new ArrayList<>();
-
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
         View contentView = inflater.inflate(R.layout.fragment_first, container, false);
-        ListView listView = contentView.findViewById(R.id.listview);
 
         homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
-        homeViewModel.setBins(list);
 
-        this.listAdapter = new NoteAdapter(homeViewModel.getBins().getValue(), container.getContext());
-        listView.setAdapter(listAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SessionModel clickedItem = (SessionModel) parent.getItemAtPosition(position);
-
-                Toast.makeText(view.getContext(), "Clicked: " + clickedItem.getDate(), Toast.LENGTH_SHORT).show();
-
-                // You can also start a new activity, update UI, etc.
-                // Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                // intent.putExtra("item_data", clickedItem);
-                // startActivity(intent);
-            }
+        // Observe LiveData bins
+        homeViewModel.getSessions().observe(getViewLifecycleOwner(), sessions -> {
+            // Update adapter
+            sessionAdapter.updateBins(sessions);
         });
 
         enterButton = contentView.findViewById(R.id.fab);
@@ -72,19 +61,26 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         return contentView;
     }
 
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(View view,
+                              Bundle savedInstanceState)
+    {
         super.onViewCreated(view, savedInstanceState);
 
-        // Observe the LiveData. The onChanged() method is called when the data changes.
-        homeViewModel.getBins().observe(getViewLifecycleOwner(), bins -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (homeViewModel.getBins().getValue().size() > 0)
-                    ((MainActivity) getActivity()).sendBinAlertNotification(bins);
-            }
+        // Assign sessionlist to SessionAdapter
+        sessionAdapter = new SessionAdapter(homeViewModel.getSessions().getValue(), this::onItemClicked);
 
-            listAdapter.notifyDataSetChanged();
-        });
+        // Set the LayoutManager that this RecyclerView will use.
+        RecyclerView recyclerView = view.findViewById(R.id.binRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        // adapter instance is set to the recyclerview to inflate the items.
+        recyclerView.setAdapter(sessionAdapter);
+
+        // Add gray divider between items
+        DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        divider.setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.recycler_divider));
+        recyclerView.addItemDecoration(divider);
     }
 
     @Override
@@ -96,15 +92,8 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.fab) {
-            List<SessionModel> newList = new ArrayList<>();
-
-            //prompt for item
-            promptForSession();
-
-            homeViewModel.addItems(newList);
-
             Toast.makeText(v.getContext(), "Add Button Clicked!", Toast.LENGTH_SHORT).show();
-            // Add more cases for other buttons if needed
+            promptForSession();
         }
     }
 
@@ -123,12 +112,13 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                SessionModel tempSession = new SessionModel();
-                tempSession.setDate(alertPromptDate.getText().toString());
-                tempSession.setAgenda(alertPromptAgenda.getText().toString());
-                tempSession.setNotes(alertPromptNotes.getText().toString());
-                list.add(tempSession);
-                listAdapter.notifyDataSetChanged();
+
+                Session session = new Session(alertPromptDate.getText().toString(),
+                        alertPromptAgenda.getText().toString(),
+                        alertPromptNotes.getText().toString());
+
+                homeViewModel.insert(session);
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     ((MainActivity) getActivity()).sendBinAlertNotification(list);
                 }
@@ -145,4 +135,8 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         builder.show();
     }
 
+    @Override
+    public void onItemClicked(Session session) {
+        Toast.makeText(this.getContext(), session.getAgenda(), Toast.LENGTH_SHORT).show();
+    }
 }

@@ -1,6 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
+    id 'com.google.devtools.ksp' version '1.8.0-1.0.8'
 }
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     namespace 'com.spencer.therapynotestracker'
@@ -23,8 +27,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     buildFeatures {
         viewBinding true
@@ -32,12 +36,32 @@ android {
 }
 
 dependencies {
+    implementation "androidx.room:room-runtime:2.5.1"
+    implementation "androidx.room:room-ktx:2.5.1"
+    kapt "androidx.room:room-compiler:2.5.1"
+    androidTestImplementation "androidx.room:room-testing:2.5.1"
+
+
+    //Room
+    //implementation(libs.room.runtime.v260)
+    //kapt(libs.room.compiler.v260)
+
+    //implementation(libs.room.ktx)
+    //implementation libs.lifecycle.extensions
+    //kapt libs.lifecycle.compiler
+    //implementation libs.room.runtime.v200alpha1
+    //kapt libs.room.compiler.v200alpha1
+    //annotationProcessor libs.room.runtime.v200alpha1
+
     implementation libs.appcompat
     implementation libs.material
     implementation libs.constraintlayout
     implementation libs.navigation.fragment
     implementation libs.navigation.ui
+    implementation libs.room.common.jvm
+    implementation libs.room.runtime
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+
 }

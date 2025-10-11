@@ -1,35 +1,37 @@
 package com.spencer.therapynotestracker;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+
 import java.util.List;
 
-public class HomeViewModel extends ViewModel {
+public class HomeViewModel extends AndroidViewModel {
 
-    private final MutableLiveData<List<SessionModel>> binsLiveData = new MutableLiveData<>();
+    private SessionRepository mRepository;
 
-    public void setBins(List<SessionModel> bins) {
-        binsLiveData.setValue(bins);
+    private LiveData<List<Session>> sessionsLiveData;
+
+    public HomeViewModel(@NonNull Application application) {
+        super(application);
+        mRepository = new SessionRepository(application);
+        sessionsLiveData = mRepository.getAllSessions();
     }
 
-    public LiveData<List<SessionModel>> getBins() {
-        return binsLiveData;
+    public LiveData<List<Session>> getSessions() {
+        return sessionsLiveData;
     }
 
-    public void addItem(SessionModel item) {
-        List<SessionModel> temp = binsLiveData.getValue();
-        temp.add(item);
-        binsLiveData.setValue(temp);
-    }
-
-    public void addItems(List<SessionModel> items) {
-        List<SessionModel> temp = binsLiveData.getValue();
-
+    public void addItems(List<Session> items) {
         for (int i=0; i<items.size();i++) {
-            temp.add(items.get(i));
+            insert(items.get(i));
         }
-        binsLiveData.setValue(temp);
+    }
+
+    void insert(Session session) {
+        mRepository.insert(session);
     }
 
 }
