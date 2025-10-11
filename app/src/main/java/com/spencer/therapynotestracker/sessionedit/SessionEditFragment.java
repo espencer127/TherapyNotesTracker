@@ -45,8 +45,12 @@ public class SessionEditFragment extends Fragment {
         );
 
         binding.buttonSaveSessionEdit.setOnClickListener(v -> {
-            EditText editAgenda = view.findViewById(R.id.edit_agenda);
-            Toast.makeText(v.getContext(), editAgenda.getText(), Toast.LENGTH_SHORT).show();
+                attemptEdit();
+            }
+        );
+
+        binding.buttonSaveSessionDelete.setOnClickListener(v -> {
+                attemptDelete();
             }
         );
 
@@ -58,12 +62,22 @@ public class SessionEditFragment extends Fragment {
             EditText editAgenda = view.findViewById(R.id.edit_agenda);
             EditText editNotes = view.findViewById(R.id.edit_notes);
 
-
             // Set the text
             editDate.setText(session.getDate());
             editAgenda.setText(session.getAgenda());
             editNotes.setText(session.getNotes());
         });
+    }
+
+    private void attemptEdit() {
+        EditText editAgenda = getView().findViewById(R.id.edit_agenda);
+        Toast.makeText(getView().getContext(), editAgenda.getText(), Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void attemptDelete() {
+        EditText editAgenda = getView().findViewById(R.id.edit_agenda);
+        Toast.makeText(getView().getContext(), editAgenda.getText(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
