@@ -3,47 +3,61 @@ package com.spencer.therapynotestracker;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.BinViewHolder> {
+public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionViewHolder> {
+
 
     private List<Session> sessions;
+    private SelectListener mListener;
 
-    public SessionAdapter(List<Session> sessions) {
+    public SessionAdapter(List<Session> sessions, SelectListener listener) {
         this.sessions = sessions;
+        this.mListener = listener;
     }
 
-    public static class BinViewHolder extends RecyclerView.ViewHolder {
+    public static class SessionViewHolder extends RecyclerView.ViewHolder {
         public TextView date;
         public TextView agenda;
         public TextView notes;
 
-        public BinViewHolder(View itemView) {
+        Button myButton;
+
+        public SessionViewHolder(View itemView) {
             super(itemView);
             date = itemView.findViewById(R.id.sessionDate);
             agenda = itemView.findViewById(R.id.sessionAgenda);
             notes = itemView.findViewById(R.id.sessionNotes);
 
+            myButton = itemView.findViewById(R.id.myButton);
         }
     }
 
     @Override
-    public BinViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SessionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.session_item, parent, false);
-        return new BinViewHolder(view);
+        return new SessionViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(BinViewHolder holder, int position) {
+    public void onBindViewHolder(SessionViewHolder holder, int position) {
         Session session = sessions.get(position);
         holder.date.setText(session.getDate());
         holder.agenda.setText(session.getAgenda());
         holder.notes.setText(session.getNotes());
+
+        holder.myButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onItemClicked(sessions.get(holder.getAdapterPosition()));
+            }
+        });
     }
 
     @Override
