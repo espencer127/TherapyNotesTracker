@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spencer.therapynotestracker.databinding.FragmentFirstBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FirstFragment extends Fragment implements View.OnClickListener {
@@ -49,21 +48,10 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
 
         homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
-        //RecyclerView recyclerView = binding.binRecyclerView;
-        //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        //recyclerView.setAdapter(this.sessionAdapter);
-
-        // Add gray divider between items
-        //DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
-        //divider.setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.recycler_divider));
-        //recyclerView.addItemDecoration(divider);
-
         // Observe LiveData bins
         homeViewModel.getSessions().observe(getViewLifecycleOwner(), sessions -> {
             // Update adapter
             sessionAdapter.updateBins(sessions);
-
-            Log.d("First Fragment ln 81", sessionAdapter.getSessions().toString());
         });
 
         enterButton = contentView.findViewById(R.id.fab);
@@ -78,24 +66,14 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
     {
         super.onViewCreated(view, savedInstanceState);
 
-        // getting the employeelist
-        this.list = new ArrayList<>();
-
-        Session testSesh = new Session("date666", "agenda666", "notes666");
-        List<Session> seshList = new ArrayList<>();
-        seshList.add(testSesh);
-
-        // Assign employeelist to ItemAdapter
+        // Assign sessionlist to SessionAdapter
         sessionAdapter = new SessionAdapter(homeViewModel.getSessions().getValue());
 
-
-        // Set the LayoutManager that
-        // this RecyclerView will use.
+        // Set the LayoutManager that this RecyclerView will use.
         RecyclerView recyclerView = view.findViewById(R.id.binRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // adapter instance is set to the
-        // recyclerview to inflate the items.
+        // adapter instance is set to the recyclerview to inflate the items.
         recyclerView.setAdapter(sessionAdapter);
 
         // Add gray divider between items
@@ -134,20 +112,14 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                Log.d("Home View Model ln 137", sessionAdapter.getSessions().toString());
+                Session session = new Session(alertPromptDate.getText().toString(),
+                        alertPromptAgenda.getText().toString(),
+                        alertPromptNotes.getText().toString());
 
-                Session tempSession = new Session
-                (alertPromptDate.getText().toString(),
-                alertPromptAgenda.getText().toString(),
-                alertPromptNotes.getText().toString());
-                list.add(tempSession);
-
-                Session session = new Session(tempSession.getDate(), tempSession.getAgenda(), tempSession.getNotes());
                 homeViewModel.insert(session);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     ((MainActivity) getActivity()).sendBinAlertNotification(list);
-                    Log.d("First Fragment Ln 155", sessionAdapter.getSessions().toString());
                 }
             }
         });
