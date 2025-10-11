@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,7 +47,6 @@ public class SessionEditFragment extends Fragment {
         binding.buttonSaveSessionEdit.setOnClickListener(v -> {
             EditText editAgenda = view.findViewById(R.id.edit_agenda);
             Toast.makeText(v.getContext(), editAgenda.getText(), Toast.LENGTH_SHORT).show();
-
             }
         );
 
@@ -54,7 +54,7 @@ public class SessionEditFragment extends Fragment {
         activeSessionViewModel.getSelectedItem().observe(getViewLifecycleOwner(), session -> {
             // Update the list UI.
             // Find the TextView by its ID
-            EditText editDate = view.findViewById(R.id.edit_date);
+            TextView editDate = view.findViewById(R.id.view_date);
             EditText editAgenda = view.findViewById(R.id.edit_agenda);
             EditText editNotes = view.findViewById(R.id.edit_notes);
 
