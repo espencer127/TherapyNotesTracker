@@ -12,16 +12,16 @@ public class HomeViewModel extends AndroidViewModel {
 
     private SessionRepository mRepository;
 
-    private LiveData<List<Session>> sessionsLiveData;
+    private LiveData<List<Session>> sessionsListLiveData;
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
         mRepository = new SessionRepository(application);
-        sessionsLiveData = mRepository.getAllSessions();
+        sessionsListLiveData = mRepository.getAllSessions();
     }
 
     public LiveData<List<Session>> getSessions() {
-        return sessionsLiveData;
+        return sessionsListLiveData;
     }
 
     public void addItems(List<Session> items) {

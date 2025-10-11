@@ -51,10 +51,6 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-//        if (ContextCompat.checkSelfPermission(RegisterActivity.this,      Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
-//            ActivityCompat.requestPermissions(this,
-//                    new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_POST_NOTIFICATION_STATE_PERMISSION);
-//        }
     }
 
     @Override
