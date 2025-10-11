@@ -1,4 +1,4 @@
-package com.spencer.therapynotestracker;
+package com.spencer.therapynotestracker.sessionedit;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,11 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.spencer.therapynotestracker.databinding.FragmentSecondBinding;
+import com.spencer.therapynotestracker.R;
+import com.spencer.therapynotestracker.databinding.FragmentSessionEditBinding;
 
-public class SecondFragment extends Fragment {
+public class SessionEditFragment extends Fragment {
 
-    private FragmentSecondBinding binding;
+    private FragmentSessionEditBinding binding;
 
     @Override
     public View onCreateView(
@@ -21,7 +22,7 @@ public class SecondFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentSecondBinding.inflate(inflater, container, false);
+        binding = FragmentSessionEditBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -30,7 +31,7 @@ public class SecondFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.buttonSecond.setOnClickListener(v ->
-                NavHostFragment.findNavController(SecondFragment.this)
+                NavHostFragment.findNavController(SessionEditFragment.this)
                         .navigate(R.id.action_SecondFragment_to_FirstFragment)
         );
     }

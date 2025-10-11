@@ -13,16 +13,16 @@
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            app:destination="@id/SessionEditFragment" />
         <action
             android:id="@+id/action_FirstFragment_to_AddFragment"
             app:destination="@id/AddFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.spencer.therapynotestracker.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/SessionEditFragment"
+        android:name="com.spencer.therapynotestracker.sessionedit.SessionEditFragment"
+        android:label="@string/session_edit_fragment_label"
+        tools:layout="@layout/fragment_session_edit">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
