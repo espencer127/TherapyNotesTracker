@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.spencer.therapynotestracker.R;
+import com.spencer.therapynotestracker.SessionRepository;
 import com.spencer.therapynotestracker.databinding.FragmentSessionEditBinding;
 
 public class SessionEditFragment extends Fragment {
@@ -22,6 +23,7 @@ public class SessionEditFragment extends Fragment {
     private FragmentSessionEditBinding binding;
 
     private ActiveSessionViewModel activeSessionViewModel;
+
 
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
@@ -77,7 +79,15 @@ public class SessionEditFragment extends Fragment {
 
     private void attemptDelete() {
         EditText editAgenda = getView().findViewById(R.id.edit_agenda);
-        Toast.makeText(getView().getContext(), editAgenda.getText(), Toast.LENGTH_SHORT).show();
+        TextView date = getView().findViewById(R.id.view_date);
+        String dateDate = date.getText().toString();
+
+        activeSessionViewModel.deleteItem(dateDate);
+
+        Toast.makeText(getView().getContext(), "Deleted the item", Toast.LENGTH_SHORT).show();
+
+        NavHostFragment.findNavController(SessionEditFragment.this)
+                .navigate(R.id.action_SecondFragment_to_FirstFragment);
     }
 
     @Override

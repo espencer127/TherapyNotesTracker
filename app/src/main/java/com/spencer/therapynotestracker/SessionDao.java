@@ -36,4 +36,7 @@ public interface SessionDao {
         @Query("DELETE FROM session_table")
         void deleteAll();
 
+        @Query("DELETE FROM session_table WHERE date = :date")
+        void delete(String date);
+
 }

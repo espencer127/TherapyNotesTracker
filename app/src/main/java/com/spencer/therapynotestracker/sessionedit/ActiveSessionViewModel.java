@@ -6,20 +6,19 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.spencer.therapynotestracker.Session;
+import com.spencer.therapynotestracker.SessionRepository;
 
-public class ActiveSessionViewModel extends ViewModel {
+public class ActiveSessionViewModel extends AndroidViewModel {
+
+    private SessionRepository mRepository;
 
     private final MutableLiveData<Session> selectedItem = new MutableLiveData<Session>();
 
-    public ActiveSessionViewModel() {
-
-    }
-
-    public ActiveSessionViewModel(Session session) {
-        selectedItem.setValue(session);
+    public ActiveSessionViewModel(@NonNull Application application) {
+        super(application);
+        mRepository = new SessionRepository(application);
     }
 
     public void selectItem(Session item) {
@@ -28,6 +27,10 @@ public class ActiveSessionViewModel extends ViewModel {
 
     public LiveData<Session> getSelectedItem() {
         return selectedItem;
+    }
+
+    public void deleteItem(String dateDate) {
+        mRepository.delete(dateDate);
     }
 
 }
