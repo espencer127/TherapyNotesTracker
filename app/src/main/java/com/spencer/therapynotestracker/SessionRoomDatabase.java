@@ -28,7 +28,6 @@ public abstract class SessionRoomDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     SessionRoomDatabase.class, "Session_database")
-                            //.addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
@@ -36,27 +35,5 @@ public abstract class SessionRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    /**
-     * Override the onCreate method to populate the database.
-     * For this sample, we clear the database every time it is created.
-     */
-    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
-
-            databaseWriteExecutor.execute(() -> {
-                // Populate the database in the background.
-                // If you want to start with more Sessions, just add them.
-                SessionDao dao = INSTANCE.SessionDao();
-                dao.deleteAll();
-
-                Session Session = new Session("Hello", "Agenda", "notes");
-                dao.insert(Session);
-                Session = new Session("World", "agenda2", "notes2");
-                dao.insert(Session);
-            });
-        }
-    };
 }
 

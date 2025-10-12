@@ -13,29 +13,28 @@
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            app:destination="@id/SessionEditFragment" />
         <action
             android:id="@+id/action_FirstFragment_to_AddFragment"
-            app:destination="@id/AddFragment" />
+            app:destination="@id/NewSessionPrompt" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.spencer.therapynotestracker.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/SessionEditFragment"
+        android:name="com.spencer.therapynotestracker.sessionedit.SessionEditFragment"
+        android:label="@string/session_edit_fragment_label"
+        tools:layout="@layout/fragment_session_edit">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/AddFragment"
-        android:name="com.spencer.therapynotestracker.AddFragment"
-        android:label="@string/add_fragment_label"
-        tools:layout="@layout/fragment_add">
+    <dialog
+        android:id="@+id/NewSessionPrompt"
+        android:label="Prompt"
+        tools:layout="@layout/alert_session_prompt">
 
         <action
             android:id="@+id/action_AddFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
-    </fragment>
+    </dialog>
 </navigation>

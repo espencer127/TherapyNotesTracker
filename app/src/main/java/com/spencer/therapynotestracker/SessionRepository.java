@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-class SessionRepository {
+public class SessionRepository {
     private SessionDao mSessionDao;
     private LiveData<List<Session>> mAllSessions;
 
@@ -14,7 +14,7 @@ class SessionRepository {
 // dependency. This adds complexity and much more code, and this sample is not about testing.
 // See the BasicSample in the android-architecture-components repository at
 // https://github.com/googlesamples
-    SessionRepository(Application application) {
+    public SessionRepository(Application application) {
         SessionRoomDatabase db = SessionRoomDatabase.getDatabase(application);
         mSessionDao = db.SessionDao();
         mAllSessions = mSessionDao.getAlphabetizedSessions();
@@ -31,6 +31,20 @@ class SessionRepository {
     public void insert(Session session) {
         SessionRoomDatabase.databaseWriteExecutor.execute(() -> {
             mSessionDao.insert(session);
+        });
+        mAllSessions = mSessionDao.getAlphabetizedSessions();
+    }
+
+    public void delete(String date) {
+        SessionRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mSessionDao.delete(date);
+        });
+        mAllSessions = mSessionDao.getAlphabetizedSessions();
+    }
+
+    public void edit(Session session) {
+        SessionRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mSessionDao.updateSession(session.getDate(), session.getAgenda(), session.getNotes());
         });
         mAllSessions = mSessionDao.getAlphabetizedSessions();
     }

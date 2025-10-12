@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionViewHolder> {
+public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.SessionViewHolder> {
 
 
     private List<Session> sessions;
     private SelectListener mListener;
 
-    public SessionAdapter(List<Session> sessions, SelectListener listener) {
+    public SessionListAdapter(List<Session> sessions, SelectListener listener) {
         this.sessions = sessions;
         this.mListener = listener;
     }
@@ -68,7 +68,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
             return 0;
     }
 
-    public void updateBins(List<Session> newSessions) {
+    public void updateSessions(List<Session> newSessions) {
         this.sessions = newSessions;
         notifyDataSetChanged();
     }
