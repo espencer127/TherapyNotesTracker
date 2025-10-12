@@ -76,12 +76,14 @@ public class SessionEditFragment extends Fragment {
         EditText editAgenda = getView().findViewById(R.id.edit_agenda);
         EditText editNotes = getView().findViewById(R.id.edit_notes);
         TextView date = getView().findViewById(R.id.view_date);
+        EditText editTherapist = getView().findViewById(R.id.edit_therapist);
 
         String dateDate = date.getText().toString();
         String newAgenda = editAgenda.getText().toString();
         String newNotes = editNotes.getText().toString();
+        String newTherapist = editTherapist.getText().toString();
 
-        Session tempSesh = new Session(dateDate, newAgenda, newNotes);
+        Session tempSesh = new Session(dateDate, newAgenda, newNotes, newTherapist);
 
         activeSessionViewModel.editItem(tempSesh);
 

@@ -31,6 +31,16 @@
             app:layout_constraintTop_toBottomOf="@id/button_second" />
 
         <EditText
+            android:id="@+id/edit_therapist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your text here"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_date" />
+
+        <EditText
             android:id="@+id/edit_agenda"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,7 +57,7 @@
             android:maxLength="1500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_date" />
+            app:layout_constraintTop_toBottomOf="@id/edit_therapist" />
 
         <EditText
             android:id="@+id/edit_notes"

@@ -44,7 +44,7 @@ public class SessionRepository {
 
     public void edit(Session session) {
         SessionRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mSessionDao.updateSession(session.getDate(), session.getAgenda(), session.getNotes());
+            mSessionDao.updateSession(session.getDate(), session.getAgenda(), session.getNotes(), session.getTherapist());
         });
         mAllSessions = mSessionDao.getAlphabetizedSessions();
     }

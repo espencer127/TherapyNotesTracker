@@ -112,6 +112,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener, Sel
         final EditText alertPromptDate = dialogueView.findViewById(R.id.alertSessionDate);
         final EditText alertPromptAgenda = dialogueView.findViewById(R.id.alertSessionAgenda);
         final EditText alertPromptNotes = dialogueView.findViewById(R.id.alertSessionNotes);
+        final EditText alertPromptTherapist = dialogueView.findViewById(R.id.alertSessionTherapist);
 
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
@@ -119,7 +120,8 @@ public class FirstFragment extends Fragment implements View.OnClickListener, Sel
 
                 Session session = new Session(alertPromptDate.getText().toString(),
                         alertPromptAgenda.getText().toString(),
-                        alertPromptNotes.getText().toString());
+                        alertPromptNotes.getText().toString(),
+                        alertPromptTherapist.getText().toString());
 
                 homeViewModel.insert(session);
 

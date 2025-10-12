@@ -14,6 +14,14 @@
         android:contentDescription="Session Date"/>
 
     <EditText
+        android:id="@+id/alertSessionTherapist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter session therapist"
+        android:inputType="text"
+        android:contentDescription="Session Therapist"/>
+
+    <EditText
         android:id="@+id/alertSessionAgenda"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
