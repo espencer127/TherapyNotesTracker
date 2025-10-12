@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.spencer.therapynotestracker.R;
+import com.spencer.therapynotestracker.Session;
 import com.spencer.therapynotestracker.SessionRepository;
 import com.spencer.therapynotestracker.databinding.FragmentSessionEditBinding;
 
@@ -73,7 +74,21 @@ public class SessionEditFragment extends Fragment {
 
     private void attemptEdit() {
         EditText editAgenda = getView().findViewById(R.id.edit_agenda);
-        Toast.makeText(getView().getContext(), editAgenda.getText(), Toast.LENGTH_SHORT).show();
+        EditText editNotes = getView().findViewById(R.id.edit_notes);
+        TextView date = getView().findViewById(R.id.view_date);
+
+        String dateDate = date.getText().toString();
+        String newAgenda = editAgenda.getText().toString();
+        String newNotes = editNotes.getText().toString();
+
+        Session tempSesh = new Session(dateDate, newAgenda, newNotes);
+
+        activeSessionViewModel.editItem(tempSesh);
+
+        Toast.makeText(getView().getContext(), "Edited record with date " + editAgenda.getText(), Toast.LENGTH_SHORT).show();
+
+        NavHostFragment.findNavController(SessionEditFragment.this)
+                .navigate(R.id.action_SecondFragment_to_FirstFragment);
 
     }
 

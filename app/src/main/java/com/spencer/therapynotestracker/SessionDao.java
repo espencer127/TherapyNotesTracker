@@ -39,4 +39,8 @@ public interface SessionDao {
         @Query("DELETE FROM session_table WHERE date = :date")
         void delete(String date);
 
+        @Query("UPDATE session_table SET agenda = :newAgenda, notes = :newNotes WHERE date = :date")
+        void updateSession(String date, String newAgenda, String newNotes);
+
+
 }

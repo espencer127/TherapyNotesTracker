@@ -33,4 +33,8 @@ public class ActiveSessionViewModel extends AndroidViewModel {
         mRepository.delete(dateDate);
     }
 
+    public void editItem(Session session) {
+        mRepository.edit(session);
+    }
+
 }

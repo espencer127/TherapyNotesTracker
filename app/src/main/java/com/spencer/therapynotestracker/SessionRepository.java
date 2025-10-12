@@ -41,4 +41,11 @@ public class SessionRepository {
         });
         mAllSessions = mSessionDao.getAlphabetizedSessions();
     }
+
+    public void edit(Session session) {
+        SessionRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mSessionDao.updateSession(session.getDate(), session.getAgenda(), session.getNotes());
+        });
+        mAllSessions = mSessionDao.getAlphabetizedSessions();
+    }
 }
