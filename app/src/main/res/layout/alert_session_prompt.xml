@@ -18,7 +18,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter session agenda"
-        android:inputType="text"
+        android:inputType="textMultiLine"
+
+        android:overScrollMode="always"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="vertical"
+        android:gravity="start"
+        android:maxLines="20"
+        android:minLines="5"
+        android:lines="5"
+        android:maxLength="1500"
+
         android:contentDescription="Session Agenda"/>
 
     <EditText
@@ -26,7 +36,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter session notes"
-        android:inputType="text"
+        android:inputType="textMultiLine"
+
+        android:overScrollMode="always"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="vertical"
+        android:gravity="start"
+        android:maxLines="20"
+        android:minLines="5"
+        android:lines="5"
+        android:maxLength="1500"
+
         android:contentDescription="Session Notes"/>
 
 </LinearLayout>

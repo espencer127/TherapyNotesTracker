@@ -89,7 +89,6 @@ public class SessionEditFragment extends Fragment {
 
         NavHostFragment.findNavController(SessionEditFragment.this)
                 .navigate(R.id.action_SecondFragment_to_FirstFragment);
-
     }
 
     private void attemptDelete() {
@@ -99,7 +98,7 @@ public class SessionEditFragment extends Fragment {
 
         activeSessionViewModel.deleteItem(dateDate);
 
-        Toast.makeText(getView().getContext(), "Deleted the item", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getView().getContext(), "Deleted the item for date " + dateDate, Toast.LENGTH_SHORT).show();
 
         NavHostFragment.findNavController(SessionEditFragment.this)
                 .navigate(R.id.action_SecondFragment_to_FirstFragment);

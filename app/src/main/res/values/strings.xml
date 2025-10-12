@@ -2,9 +2,8 @@
     <string name="app_name">Therapy Notes Tracker</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="session_edit_fragment_label">Session Edit Fragment</string>
-    <string name="add_fragment_label">Add Fragment</string>
+    <string name="first_fragment_label">View Sessions</string>
+    <string name="session_edit_fragment_label">Edit Session</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="enter">Enter</string>
@@ -16,4 +15,5 @@
         dui nec risus. Maecenas non sodales nisi, vel dictum dolor.
     </string>
     <string name="delete">Delete</string>
+    <string name="expand">Expand</string>
 </resources>

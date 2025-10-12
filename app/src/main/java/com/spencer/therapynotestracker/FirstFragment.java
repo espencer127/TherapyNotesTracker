@@ -103,7 +103,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener, Sel
 
     private void promptForSession() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-        builder.setTitle("Enter Session Details");
+
 
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogueView = inflater.inflate(R.layout.alert_session_prompt, null);
