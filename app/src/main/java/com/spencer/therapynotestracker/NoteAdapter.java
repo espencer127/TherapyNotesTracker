@@ -1,12 +1,12 @@
 package com.spencer.therapynotestracker;
 
-import static java.security.AccessController.getContext;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.spencer.therapynotestracker.database.Session;
 
 import java.util.List;
 

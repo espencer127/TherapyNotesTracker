@@ -1,8 +1,7 @@
-package com.spencer.therapynotestracker;
+package com.spencer.therapynotestracker.database;
 
 import androidx.lifecycle.LiveData;
 
-import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -39,8 +38,8 @@ public interface SessionDao {
         @Query("DELETE FROM session_table WHERE date = :date")
         void delete(String date);
 
-        @Query("UPDATE session_table SET agenda = :newAgenda, notes = :newNotes WHERE date = :date")
-        void updateSession(String date, String newAgenda, String newNotes);
+        @Query("UPDATE session_table SET agenda = :newAgenda, notes = :newNotes, therapist = :newTherapist WHERE date = :date")
+        void updateSession(String date, String newAgenda, String newNotes, String newTherapist);
 
 
 }

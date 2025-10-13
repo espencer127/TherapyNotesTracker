@@ -6,6 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.spencer.therapynotestracker.database.Session;
+import com.spencer.therapynotestracker.database.SessionRepository;
+
 import java.util.List;
 
 public class HomeViewModel extends AndroidViewModel {
@@ -30,7 +33,7 @@ public class HomeViewModel extends AndroidViewModel {
         }
     }
 
-    void insert(Session session) {
+    public void insert(Session session) {
         mRepository.insert(session);
     }
 
