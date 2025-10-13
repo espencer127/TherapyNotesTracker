@@ -63,7 +63,7 @@ public class Session {
     public String getTherapist() {return this.therapist;}
 
     public String toString() {
-        return " " + this.date + " " + this.therapist + " " + this.agenda + " " + this.notes;
+        return this.date + "," + this.agenda + "," + this.notes + "," + this.therapist;
     }
 
 

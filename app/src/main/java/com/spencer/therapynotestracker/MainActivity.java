@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -32,10 +33,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int CREATE_FILE_REQUEST_CODE = 1;
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
@@ -81,29 +85,58 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "There's nothing to setup", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.action_export_data) {
             Toast.makeText(MainActivity.this, "Exporting data!", Toast.LENGTH_SHORT).show();
-            exportData();
+            String suggestedFileName = "session data.txt";
+            String mimeType = "text/plain";
+
+            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType(mimeType);
+            intent.putExtra(Intent.EXTRA_TITLE, suggestedFileName);
+
+            startActivityForResult(intent, CREATE_FILE_REQUEST_CODE);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void exportData() {
-        final int CREATE_FILE_REQUEST_CODE = 1;
-        String fileContentToSave = "This is the content to be saved.";
-        String suggestedFileName = "session data.txt";
-        String mimeType = "text/plain";
-
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType(mimeType);
-        intent.putExtra(Intent.EXTRA_TITLE, suggestedFileName);
-
-        startActivityForResult(intent, CREATE_FILE_REQUEST_CODE);
-
+    private String buildExportDataString() {
         List<Session> sessions = sessionListViewModel.getSessions().getValue();
 
+        StringBuilder result = new StringBuilder();
+
         for (Session session : sessions) {
-            Log.d("MainActivity", session.toString());
+            result.append(session.toString());
+            result.append("\n");
+        }
+
+        Log.d("MainActivity", result.toString());
+
+        return result.toString();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CREATE_FILE_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null) {
+                Uri fileUri = data.getData();
+                if (fileUri != null) {
+                    // Now, write your generated file content to this URI
+                    try {
+                        OutputStream outputStream = getContentResolver().openOutputStream(fileUri);
+                        if (outputStream != null) {
+                            // Example: writing a simple string
+                            String content = buildExportDataString();
+                            outputStream.write(content.getBytes());
+                            outputStream.close();
+                            // File saved successfully
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        // Handle error during file writing
+                    }
+                }
+            }
         }
     }
 
