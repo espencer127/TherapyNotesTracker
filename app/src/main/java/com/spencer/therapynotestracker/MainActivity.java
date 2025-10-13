@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -23,7 +25,9 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.spencer.therapynotestracker.database.Session;
 import com.spencer.therapynotestracker.databinding.ActivityMainBinding;
+import com.spencer.therapynotestracker.sessionlist.SessionListViewModel;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -34,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+
+    private SessionListViewModel sessionListViewModel;
 
     private final int REQUEST_POST_NOTIFICATION_STATE_PERMISSION = 1;
 
@@ -51,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+        sessionListViewModel = new ViewModelProvider(this).get(SessionListViewModel.class);
 
     }
 
@@ -70,10 +78,33 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Toast.makeText(MainActivity.this, "There's nothing to setup", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.action_export_data) {
+            Toast.makeText(MainActivity.this, "Exporting data!", Toast.LENGTH_SHORT).show();
+            exportData();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void exportData() {
+        final int CREATE_FILE_REQUEST_CODE = 1;
+        String fileContentToSave = "This is the content to be saved.";
+        String suggestedFileName = "session data.txt";
+        String mimeType = "text/plain";
+
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType(mimeType);
+        intent.putExtra(Intent.EXTRA_TITLE, suggestedFileName);
+
+        startActivityForResult(intent, CREATE_FILE_REQUEST_CODE);
+
+        List<Session> sessions = sessionListViewModel.getSessions().getValue();
+
+        for (Session session : sessions) {
+            Log.d("MainActivity", session.toString());
+        }
     }
 
     @Override
@@ -107,9 +138,9 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.POST_NOTIFICATIONS)) {
-                showExplanation("Permission Needed", "Rationale", Manifest.permission.READ_PHONE_STATE, REQUEST_POST_NOTIFICATION_STATE_PERMISSION);
+                showExplanation();
             } else {
-                requestPermission(Manifest.permission.POST_NOTIFICATIONS, REQUEST_POST_NOTIFICATION_STATE_PERMISSION);
+                requestPermission(Manifest.permission.POST_NOTIFICATIONS);
             }
         } else {
             Toast.makeText(MainActivity.this, "Permission (already) Granted!", Toast.LENGTH_SHORT).show();
@@ -121,8 +152,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(
             int requestCode,
-            String permissions[],
-            int[] grantResults) {
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_POST_NOTIFICATION_STATE_PERMISSION:
@@ -135,24 +166,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showExplanation(String title,
-                                 String message,
-                                 final String permission,
-                                 final int permissionRequestCode) {
+    private void showExplanation() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title)
-                .setMessage(message)
+        builder.setTitle("Permission Needed")
+                .setMessage("Rationale")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        requestPermission(permission, permissionRequestCode);
+                        requestPermission(Manifest.permission.READ_PHONE_STATE);
                     }
                 });
         builder.create().show();
     }
 
-    private void requestPermission(String permissionName, int permissionRequestCode) {
+    private void requestPermission(String permissionName) {
         ActivityCompat.requestPermissions(this,
-                new String[]{permissionName}, permissionRequestCode);
+                new String[]{permissionName}, 1);
     }
 
 }

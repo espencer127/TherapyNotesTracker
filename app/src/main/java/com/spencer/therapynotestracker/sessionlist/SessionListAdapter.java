@@ -1,4 +1,4 @@
-package com.spencer.therapynotestracker;
+package com.spencer.therapynotestracker.sessionlist;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.spencer.therapynotestracker.R;
+import com.spencer.therapynotestracker.SelectListener;
 import com.spencer.therapynotestracker.database.Session;
 
 import java.util.List;

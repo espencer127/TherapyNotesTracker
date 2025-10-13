@@ -62,11 +62,13 @@ public class SessionEditFragment extends Fragment {
             TextView editDate = view.findViewById(R.id.view_date);
             EditText editAgenda = view.findViewById(R.id.edit_agenda);
             EditText editNotes = view.findViewById(R.id.edit_notes);
+            EditText editTherapist = view.findViewById(R.id.edit_therapist);
 
             // Set the text
             editDate.setText(session.getDate());
             editAgenda.setText(session.getAgenda());
             editNotes.setText(session.getNotes());
+            editTherapist.setText(session.getTherapist());
         });
     }
 

@@ -1,4 +1,4 @@
-package com.spencer.therapynotestracker;
+package com.spencer.therapynotestracker.sessionlist;
 
 import android.app.Application;
 
@@ -11,13 +11,13 @@ import com.spencer.therapynotestracker.database.SessionRepository;
 
 import java.util.List;
 
-public class HomeViewModel extends AndroidViewModel {
+public class SessionListViewModel extends AndroidViewModel {
 
     private SessionRepository mRepository;
 
     private LiveData<List<Session>> sessionsListLiveData;
 
-    public HomeViewModel(@NonNull Application application) {
+    public SessionListViewModel(@NonNull Application application) {
         super(application);
         mRepository = new SessionRepository(application);
         sessionsListLiveData = mRepository.getAllSessions();
