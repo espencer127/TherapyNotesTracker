@@ -1,13 +1,10 @@
-package com.spencer.therapynotestracker;
+package com.spencer.therapynotestracker.database;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,7 +26,7 @@ public abstract class SessionRoomDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     SessionRoomDatabase.class, "Session_database")
-                            .fallbackToDestructiveMigration().build();
+                            .build();
                 }
             }
         }

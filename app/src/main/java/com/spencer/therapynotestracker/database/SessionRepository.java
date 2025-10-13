@@ -1,4 +1,4 @@
-package com.spencer.therapynotestracker;
+package com.spencer.therapynotestracker.database;
 
 import android.app.Application;
 
@@ -22,7 +22,7 @@ public class SessionRepository {
 
     // Room executes all queries on a separate thread.
 // Observed LiveData will notify the observer when the data has changed.
-    LiveData<List<Session>> getAllSessions() {
+    public LiveData<List<Session>> getAllSessions() {
         return mAllSessions;
     }
 

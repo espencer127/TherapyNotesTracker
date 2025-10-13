@@ -1,7 +1,6 @@
 package com.spencer.therapynotestracker;
 
 import android.app.AlertDialog;
-import android.app.Application;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.spencer.therapynotestracker.database.Session;
 import com.spencer.therapynotestracker.databinding.FragmentFirstBinding;
 import com.spencer.therapynotestracker.sessionedit.ActiveSessionViewModel;
 

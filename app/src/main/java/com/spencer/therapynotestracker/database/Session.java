@@ -1,4 +1,4 @@
-package com.spencer.therapynotestracker;
+package com.spencer.therapynotestracker.database;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

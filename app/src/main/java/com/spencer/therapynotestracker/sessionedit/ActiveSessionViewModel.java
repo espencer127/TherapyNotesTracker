@@ -7,8 +7,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.spencer.therapynotestracker.Session;
-import com.spencer.therapynotestracker.SessionRepository;
+import com.spencer.therapynotestracker.database.Session;
+import com.spencer.therapynotestracker.database.SessionRepository;
 
 public class ActiveSessionViewModel extends AndroidViewModel {
 

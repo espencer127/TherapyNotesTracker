@@ -21,6 +21,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.spencer.therapynotestracker.database.Session;
 import com.spencer.therapynotestracker.databinding.ActivityMainBinding;
 
 import android.view.Menu;
