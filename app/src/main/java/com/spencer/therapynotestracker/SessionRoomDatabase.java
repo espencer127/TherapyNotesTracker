@@ -12,7 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Session.class}, version = 8, exportSchema = true)
+@Database(entities = {Session.class}, version = 9, exportSchema = true)
 public abstract class SessionRoomDatabase extends RoomDatabase {
 
     abstract SessionDao SessionDao();
@@ -29,7 +29,7 @@ public abstract class SessionRoomDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     SessionRoomDatabase.class, "Session_database")
-                            .build();
+                            .fallbackToDestructiveMigration().build();
                 }
             }
         }

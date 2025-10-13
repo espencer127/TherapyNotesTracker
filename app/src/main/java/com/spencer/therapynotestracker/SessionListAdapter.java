@@ -26,6 +26,8 @@ public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.
         public TextView agenda;
         public TextView notes;
 
+        public TextView therapist;
+
         Button myButton;
 
         public SessionViewHolder(View itemView) {
@@ -33,6 +35,7 @@ public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.
             date = itemView.findViewById(R.id.sessionDate);
             agenda = itemView.findViewById(R.id.sessionAgenda);
             notes = itemView.findViewById(R.id.sessionNotes);
+            therapist = itemView.findViewById(R.id.sessionTherapist);
 
             myButton = itemView.findViewById(R.id.myButton);
         }
@@ -51,6 +54,7 @@ public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.
         holder.date.setText(session.getDate());
         holder.agenda.setText(session.getAgenda());
         holder.notes.setText(session.getNotes());
+        holder.therapist.setText(session.getTherapist());
 
         holder.myButton.setOnClickListener(new View.OnClickListener() {
             @Override
