@@ -34,6 +34,10 @@ public class Session {
         this.therapist = therapist;
     }
 
+    public Session() {
+
+    }
+
     public void setDate(String string) {
         this.date = string;
     }

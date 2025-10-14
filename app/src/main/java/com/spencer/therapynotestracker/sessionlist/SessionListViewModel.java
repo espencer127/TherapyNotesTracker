@@ -27,14 +27,16 @@ public class SessionListViewModel extends AndroidViewModel {
         return sessionsListLiveData;
     }
 
-    public void addItems(List<Session> items) {
-        for (int i=0; i<items.size();i++) {
-            insert(items.get(i));
-        }
-    }
-
     public void insert(Session session) {
         mRepository.insert(session);
+    }
+
+    public void insertAll(List<Session> sessions) {
+        mRepository.insertAll(sessions);
+    }
+
+    public void deleteAll() {
+        mRepository.deleteAll();
     }
 
 }

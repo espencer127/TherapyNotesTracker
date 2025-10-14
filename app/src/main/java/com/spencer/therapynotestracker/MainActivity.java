@@ -37,16 +37,20 @@ import com.spencer.therapynotestracker.sessionlist.SessionListViewModel;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -79,6 +83,13 @@ public class MainActivity extends AppCompatActivity {
 
         sessionListViewModel = new ViewModelProvider(this).get(SessionListViewModel.class);
 
+        if (Build.VERSION.SDK_INT >= 30){
+            if (!Environment.isExternalStorageManager()){
+                Intent getpermission = new Intent();
+                getpermission.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivity(getpermission);
+            }
+        }
     }
 
     @Override
@@ -183,53 +194,76 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String extractDataFromFile(Uri fileUri) throws IOException, CsvValidationException {
-
-        //String name = queryName(getContentResolver(), fileUri);
+    private void extractDataFromFile(Uri fileUri) throws IOException, CsvValidationException {
 
         FileUtils fileUtils = new FileUtils(getBaseContext());
         String result = fileUtils.getPath(fileUri);
+        File csvFile = new File(result);
 
-        CSVReader csvReader = new CSVReader(new FileReader(result));
+        CSVReader csvReader = new CSVReader(new FileReader(csvFile));
         String[] nextLine;
-        int count = 0;
         StringBuilder columns = new StringBuilder();
-        StringBuilder value = new StringBuilder();
+
+        int deleteWasRun = 0;
+
+        String tempSesh = "";
+        Session tempSession = new Session();
 
         while ((nextLine = csvReader.readNext()) != null) {
+            if (deleteWasRun == 0) {
+                if (sessionListViewModel.getSessions().getValue() != null && !sessionListViewModel.getSessions().getValue().isEmpty())
+                    sessionListViewModel.deleteAll();
+                deleteWasRun =1;
+            }
             // nextLine[] is an array of values from the line
-            for (int i = 0; i < nextLine.length - 1; i++) {
-                if (count == 0) {
-                    if (i == nextLine.length - 2)
-                        columns.append(nextLine[i]);
-                    else
-                        columns.append(nextLine[i]).append(",");
+            for (int i = 0; i < nextLine.length; i++) {
+                if (i == nextLine.length - 1) {
+                    columns.append(nextLine[i]).append("\n");
+
+                    tempSesh = columns.toString();
+                    tempSession = transformCSVtoSession(tempSesh);
+
+                    sessionListViewModel.insert(tempSession);
+                    columns.delete(0, columns.length());
                 } else {
-                    if (i == nextLine.length - 2)
-                        value.append("'").append(nextLine[i]).append("'");
-                    else
-                        value.append("'").append(nextLine[i]).append("',");
+                    columns.append(nextLine[i]).append(",");
                 }
             }
-
-            Log.d("Main Activity 190", columns + "-------" + value);
-
         }
 
-        return "";
+        String csvContent = columns.toString();
+
+        Log.d("Main Activity 190", csvContent);
+
+        return columns.toString();
     }
 
-    private String queryName(ContentResolver resolver, Uri uri) {
-        String[] projection = new String[] { OpenableColumns.DISPLAY_NAME };
-        Cursor returnCursor =
-                resolver.query(uri, projection, null, null, null);
-        assert returnCursor != null;
-        returnCursor.moveToFirst();
-        String name = returnCursor.getString(0);
-        returnCursor.close();
-        return name;
-    }
+    private Session transformCSVtoSession(String tempSesh) {
+        Session tempResult = new Session();
 
+        String finalChars = tempSesh.substring(tempSesh.length()-1, tempSesh.length());
+
+        if (StringUtils.equals(finalChars, "\n")) {
+            tempSesh = tempSesh.substring(0, tempSesh.length()-1);
+        }
+
+        int i = 0;
+        int nextCommaIndex = tempSesh.indexOf(",");
+        tempResult.setDate(tempSesh.substring(i, nextCommaIndex));
+
+        i = nextCommaIndex+1;
+        nextCommaIndex = tempSesh.indexOf(",", i);
+        tempResult.setAgenda(tempSesh.substring(i, nextCommaIndex));
+
+        i = nextCommaIndex+1;
+        nextCommaIndex = tempSesh.indexOf(",", i);
+        tempResult.setNotes(tempSesh.substring(i, nextCommaIndex));
+
+        i = nextCommaIndex+1;
+        tempResult.setTherapist(tempSesh.substring(i));
+
+        return tempResult;
+    }
 
     @Override
     public boolean onSupportNavigateUp() {
