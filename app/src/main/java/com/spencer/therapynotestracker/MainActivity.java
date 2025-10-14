@@ -234,8 +234,6 @@ public class MainActivity extends AppCompatActivity {
         String csvContent = columns.toString();
 
         Log.d("Main Activity 190", csvContent);
-
-        return columns.toString();
     }
 
     private Session transformCSVtoSession(String tempSesh) {
