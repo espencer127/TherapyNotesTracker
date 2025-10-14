@@ -1,4 +1,4 @@
-package com.spencer.therapynotestracker;
+package com.spencer.therapynotestracker.sessionlist;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -20,13 +20,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.spencer.therapynotestracker.MainActivity;
+import com.spencer.therapynotestracker.R;
+import com.spencer.therapynotestracker.SelectListener;
 import com.spencer.therapynotestracker.database.Session;
 import com.spencer.therapynotestracker.databinding.FragmentFirstBinding;
 import com.spencer.therapynotestracker.sessionedit.ActiveSessionViewModel;
 
 import java.util.List;
 
-public class FirstFragment extends Fragment implements View.OnClickListener, SelectListener {
+public class SessionListFragment extends Fragment implements View.OnClickListener, SelectListener {
 
     private FragmentFirstBinding binding;
 
@@ -34,7 +37,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener, Sel
 
     private ActiveSessionViewModel activeSession;
 
-    private HomeViewModel homeViewModel;
+    private SessionListViewModel sessionListViewModel;
 
     FloatingActionButton enterButton;
 
@@ -50,11 +53,11 @@ public class FirstFragment extends Fragment implements View.OnClickListener, Sel
 
         View contentView = inflater.inflate(R.layout.fragment_first, container, false);
 
-        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        sessionListViewModel = new ViewModelProvider(requireActivity()).get(SessionListViewModel.class);
         activeSession = new ViewModelProvider(requireActivity()).get(ActiveSessionViewModel.class);
 
         // Observe LiveData bins
-        homeViewModel.getSessions().observe(getViewLifecycleOwner(), sessions -> {
+        sessionListViewModel.getSessions().observe(getViewLifecycleOwner(), sessions -> {
             // Update adapter
             sessionListAdapter.updateSessions(sessions);
         });
@@ -72,7 +75,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener, Sel
         super.onViewCreated(view, savedInstanceState);
 
         // Assign sessionlist to SessionAdapter
-        sessionListAdapter = new SessionListAdapter(homeViewModel.getSessions().getValue(), this::onItemClicked);
+        sessionListAdapter = new SessionListAdapter(sessionListViewModel.getSessions().getValue(), this::onItemClicked);
 
         // Set the LayoutManager that this RecyclerView will use.
         RecyclerView recyclerView = view.findViewById(R.id.binRecyclerView);
@@ -98,6 +101,9 @@ public class FirstFragment extends Fragment implements View.OnClickListener, Sel
         if (v.getId() == R.id.fab) {
             Toast.makeText(v.getContext(), "Add Button Clicked!", Toast.LENGTH_SHORT).show();
             promptForSession();
+        } else if (v.getId() == R.id.action_export_data) {
+            Toast.makeText(v.getContext(), "Export data Button Clicked!", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -123,7 +129,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener, Sel
                         alertPromptNotes.getText().toString(),
                         alertPromptTherapist.getText().toString());
 
-                homeViewModel.insert(session);
+                sessionListViewModel.insert(session);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     ((MainActivity) getActivity()).sendBinAlertNotification(list);
@@ -143,13 +149,12 @@ public class FirstFragment extends Fragment implements View.OnClickListener, Sel
 
     @Override
     public void onItemClicked(Session session) {
-        NavHostFragment.findNavController(FirstFragment.this)
+        NavHostFragment.findNavController(SessionListFragment.this)
                 .navigate(R.id.action_FirstFragment_to_SecondFragment);
 
         activeSession.selectItem(session);
 
         Toast.makeText(this.getContext(), activeSession.getSelectedItem().getValue().getAgenda(), Toast.LENGTH_SHORT).show();
-
 
     }
 }

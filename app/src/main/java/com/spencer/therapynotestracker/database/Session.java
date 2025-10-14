@@ -34,6 +34,10 @@ public class Session {
         this.therapist = therapist;
     }
 
+    public Session() {
+
+    }
+
     public void setDate(String string) {
         this.date = string;
     }
@@ -63,7 +67,7 @@ public class Session {
     public String getTherapist() {return this.therapist;}
 
     public String toString() {
-        return " " + this.date + " " + this.therapist + " " + this.agenda + " " + this.notes;
+        return this.date + "," + this.agenda + "," + this.notes + "," + this.therapist;
     }
 
 

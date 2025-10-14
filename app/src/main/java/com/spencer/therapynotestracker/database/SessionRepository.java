@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class SessionRepository {
-    private SessionDao mSessionDao;
+    private final SessionDao mSessionDao;
     private LiveData<List<Session>> mAllSessions;
 
     // Note that in order to unit test the WordRepository, you have to remove the Application
@@ -35,10 +35,24 @@ public class SessionRepository {
         mAllSessions = mSessionDao.getAlphabetizedSessions();
     }
 
+    public void insertAll(List<Session> sessions) {
+        SessionRoomDatabase.databaseWriteExecutor.execute(() -> {
+            for (Session session : sessions) {
+                mSessionDao.insert(session);
+            }
+        });
+        mAllSessions = mSessionDao.getAlphabetizedSessions();
+    }
+
     public void delete(String date) {
         SessionRoomDatabase.databaseWriteExecutor.execute(() -> {
             mSessionDao.delete(date);
         });
+        mAllSessions = mSessionDao.getAlphabetizedSessions();
+    }
+
+    public void deleteAll() {
+        mSessionDao.deleteAll();
         mAllSessions = mSessionDao.getAlphabetizedSessions();
     }
 

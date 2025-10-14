@@ -1,4 +1,4 @@
-package com.spencer.therapynotestracker;
+package com.spencer.therapynotestracker.sessionlist;
 
 import android.app.Application;
 
@@ -11,13 +11,13 @@ import com.spencer.therapynotestracker.database.SessionRepository;
 
 import java.util.List;
 
-public class HomeViewModel extends AndroidViewModel {
+public class SessionListViewModel extends AndroidViewModel {
 
     private SessionRepository mRepository;
 
     private LiveData<List<Session>> sessionsListLiveData;
 
-    public HomeViewModel(@NonNull Application application) {
+    public SessionListViewModel(@NonNull Application application) {
         super(application);
         mRepository = new SessionRepository(application);
         sessionsListLiveData = mRepository.getAllSessions();
@@ -27,14 +27,16 @@ public class HomeViewModel extends AndroidViewModel {
         return sessionsListLiveData;
     }
 
-    public void addItems(List<Session> items) {
-        for (int i=0; i<items.size();i++) {
-            insert(items.get(i));
-        }
-    }
-
     public void insert(Session session) {
         mRepository.insert(session);
+    }
+
+    public void insertAll(List<Session> sessions) {
+        mRepository.insertAll(sessions);
+    }
+
+    public void deleteAll() {
+        mRepository.deleteAll();
     }
 
 }
