@@ -63,6 +63,7 @@ dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
 
-    implementation libs.commons.csv
+    // https://mvnrepository.com/artifact/com.opencsv/opencsv
+    implementation(libs.opencsv)
 
 }

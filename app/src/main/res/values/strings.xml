@@ -17,4 +17,5 @@
     <string name="delete">Delete</string>
     <string name="expand">Expand</string>
     <string name="export_data">Export Data</string>
+    <string name="import_data">Import Data</string>
 </resources>

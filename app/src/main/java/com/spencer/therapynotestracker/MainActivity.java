@@ -2,9 +2,12 @@ package com.spencer.therapynotestracker;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
@@ -18,21 +21,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 import com.spencer.therapynotestracker.database.Session;
 import com.spencer.therapynotestracker.databinding.ActivityMainBinding;
 import com.spencer.therapynotestracker.sessionlist.SessionListViewModel;
 
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -40,12 +52,15 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final int CREATE_FILE_REQUEST_CODE = 1;
+    private static final int REQUEST_CODE_PICK_FILE = 2;
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
     private SessionListViewModel sessionListViewModel;
 
     private final int REQUEST_POST_NOTIFICATION_STATE_PERMISSION = 1;
+
+    private final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +109,23 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(Intent.EXTRA_TITLE, suggestedFileName);
 
             startActivityForResult(intent, CREATE_FILE_REQUEST_CODE);
+        } else if (id == R.id.action_import_data) {
+            //Toast.makeText(MainActivity.this, "Importing data!", Toast.LENGTH_SHORT).show();
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+            } else {
+                Toast.makeText(MainActivity.this, "Already have permission to import data", Toast.LENGTH_SHORT).show();
+            }
+
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("text/plain"); // Set the MIME type to allow all file types
+            startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_CODE_PICK_FILE);
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -137,8 +169,67 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
+        } else if (requestCode == REQUEST_CODE_PICK_FILE && resultCode == RESULT_OK) {
+            if (data != null && data.getData() != null) {
+                Uri fileUri = data.getData();
+                // Process the selected file using its URI
+                Log.d("Main Activity 152", fileUri.toString());
+                try {
+                    extractDataFromFile(fileUri);
+                } catch (IOException | CsvValidationException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
+
+    private String extractDataFromFile(Uri fileUri) throws IOException, CsvValidationException {
+
+        //String name = queryName(getContentResolver(), fileUri);
+
+        FileUtils fileUtils = new FileUtils(getBaseContext());
+        String result = fileUtils.getPath(fileUri);
+
+        CSVReader csvReader = new CSVReader(new FileReader(result));
+        String[] nextLine;
+        int count = 0;
+        StringBuilder columns = new StringBuilder();
+        StringBuilder value = new StringBuilder();
+
+        while ((nextLine = csvReader.readNext()) != null) {
+            // nextLine[] is an array of values from the line
+            for (int i = 0; i < nextLine.length - 1; i++) {
+                if (count == 0) {
+                    if (i == nextLine.length - 2)
+                        columns.append(nextLine[i]);
+                    else
+                        columns.append(nextLine[i]).append(",");
+                } else {
+                    if (i == nextLine.length - 2)
+                        value.append("'").append(nextLine[i]).append("'");
+                    else
+                        value.append("'").append(nextLine[i]).append("',");
+                }
+            }
+
+            Log.d("Main Activity 190", columns + "-------" + value);
+
+        }
+
+        return "";
+    }
+
+    private String queryName(ContentResolver resolver, Uri uri) {
+        String[] projection = new String[] { OpenableColumns.DISPLAY_NAME };
+        Cursor returnCursor =
+                resolver.query(uri, projection, null, null, null);
+        assert returnCursor != null;
+        returnCursor.moveToFirst();
+        String name = returnCursor.getString(0);
+        returnCursor.close();
+        return name;
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -190,6 +281,13 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_POST_NOTIFICATION_STATE_PERMISSION:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(MainActivity.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(MainActivity.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
