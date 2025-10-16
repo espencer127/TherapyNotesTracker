@@ -52,7 +52,8 @@ public class SessionRepository {
     }
 
     public void deleteAll() {
-        mSessionDao.deleteAll();
+        SessionRoomDatabase.databaseWriteExecutor.execute(mSessionDao::deleteAll);
+
         mAllSessions = mSessionDao.getAlphabetizedSessions();
     }
 

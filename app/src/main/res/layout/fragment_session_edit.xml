@@ -84,8 +84,18 @@
             android:layout_height="wrap_content"
             android:text="@string/save"
             app:layout_constraintTop_toBottomOf="@id/edit_notes"
-            app:layout_constraintEnd_toStartOf="@id/button_save_session_delete"
+            app:layout_constraintEnd_toStartOf="@id/button_print_session"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <Button
+            android:id="@+id/button_print_session"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Print"
+            app:layout_constraintTop_toBottomOf="@id/edit_notes"
+            app:layout_constraintEnd_toStartOf="@id/button_save_session_delete"
+            app:layout_constraintStart_toEndOf="@id/button_save_session_edit"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <Button
@@ -95,7 +105,7 @@
             android:text="@string/delete"
             app:layout_constraintTop_toBottomOf="@id/edit_notes"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/button_save_session_edit"
+            app:layout_constraintStart_toEndOf="@id/button_print_session"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
