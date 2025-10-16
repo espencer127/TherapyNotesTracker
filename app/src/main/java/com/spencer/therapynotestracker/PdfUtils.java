@@ -19,7 +19,6 @@ import com.spencer.therapynotestracker.database.Session;
 public class PdfUtils {
 
     public static PdfDocument buildExportPDFString(Context context, View view) {
-
         EditText editAgenda = view.findViewById(R.id.edit_agenda);
         EditText editNotes = view.findViewById(R.id.edit_notes);
         TextView date = view.findViewById(R.id.view_date);
@@ -35,7 +34,7 @@ public class PdfUtils {
         // declaring width and height
         // for our PDF file.
         int pageHeight = 1120;
-        int pagewidth = 792;
+        int pagewidth = 670;
 
         // creating an object variable for our PDF document.
         PdfDocument pdfDocument = new PdfDocument();
@@ -50,17 +49,21 @@ public class PdfUtils {
         // creating a variable for canvas from our page of PDF.
         Canvas canvas = myPage.getCanvas();
 
-        title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+        title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         title.setTextSize(15);
         title.setColor(ContextCompat.getColor(context, R.color.black));
 
-        String concat = sesh.getDate() + " " + sesh.getTherapist() + "\nAgenda: " + sesh.getAgenda() + "\nNotes: " + sesh.getNotes();
+        canvas.drawText(sesh.getDate() + " " + sesh.getTherapist(), 10, 30, title);
+
+        title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+
+        String concat = "Agenda:\n" + sesh.getAgenda() + "\n\nNotes:\n" + sesh.getNotes();
 
         TextPaint mTextPaint = new TextPaint();
-        StaticLayout mTextLayout = new StaticLayout( concat ,mTextPaint, canvas.getWidth() - 100, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+        StaticLayout mTextLayout = new StaticLayout( concat ,mTextPaint, canvas.getWidth() - 20, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
         canvas.save();
-        int textX = 50;
-        int textY = 500;
+        int textX = 10;
+        int textY = 40;
         canvas.translate(textX, textY);
 
         mTextLayout.draw(canvas);
