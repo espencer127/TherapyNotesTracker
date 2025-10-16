@@ -148,7 +148,7 @@ public class SessionEditFragment extends Fragment {
 
         activeSessionViewModel.editItem(tempSesh);
 
-        Toast.makeText(getView().getContext(), "Edited record with date " + editAgenda.getText(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getView().getContext(), "Edited record for " + dateDate + " - " + editTherapist.getText(), Toast.LENGTH_SHORT).show();
 
         NavHostFragment.findNavController(SessionEditFragment.this)
                 .navigate(R.id.action_SecondFragment_to_FirstFragment);
@@ -161,7 +161,7 @@ public class SessionEditFragment extends Fragment {
 
         activeSessionViewModel.deleteItem(dateDate);
 
-        Toast.makeText(getView().getContext(), "Deleted the item for date " + dateDate, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getView().getContext(), "Deleted the item for " + dateDate, Toast.LENGTH_SHORT).show();
 
         NavHostFragment.findNavController(SessionEditFragment.this)
                 .navigate(R.id.action_SecondFragment_to_FirstFragment);
