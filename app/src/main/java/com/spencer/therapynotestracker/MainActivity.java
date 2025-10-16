@@ -6,11 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
-import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -29,16 +32,11 @@ import com.spencer.therapynotestracker.database.Session;
 import com.spencer.therapynotestracker.databinding.ActivityMainBinding;
 import com.spencer.therapynotestracker.sessionlist.SessionListViewModel;
 
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -46,6 +44,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
+
     private ActivityMainBinding binding;
 
     private SessionListViewModel sessionListViewModel;
@@ -97,11 +96,39 @@ public class MainActivity extends AppCompatActivity {
             intent.setType(mimeType);
             intent.putExtra(Intent.EXTRA_TITLE, suggestedFileName);
 
-            startActivityForResult(intent, Constants.CREATE_FILE_REQUEST_CODE);
+            createTextFileResultLauncher.launch(intent);
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    ActivityResultLauncher<Intent> createTextFileResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        Uri fileUri = data.getData();
+                        if (fileUri != null) {
+                            // Now, write your generated file content to this URI
+                            try {
+                                OutputStream outputStream = getContentResolver().openOutputStream(fileUri);
+                                if (outputStream != null) {
+                                    // Example: writing a simple string
+                                    String content = buildExportDataString();
+                                    outputStream.write(content.getBytes());
+                                    outputStream.close();
+                                    // File saved successfully
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                // Handle error during file writing
+                            }
+                        }
+                    }
+                }
+            });
 
     private String buildExportDataString() {
         List<Session> sessions = sessionListViewModel.getSessions().getValue();
@@ -116,34 +143,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity", result.toString());
 
         return result.toString();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        String type = data.getType();
-        if (requestCode == Constants.CREATE_FILE_REQUEST_CODE && resultCode == RESULT_OK) {
-            if (data != null) {
-                Uri fileUri = data.getData();
-                if (fileUri != null) {
-                    // Now, write your generated file content to this URI
-                    try {
-                        OutputStream outputStream = getContentResolver().openOutputStream(fileUri);
-                        if (outputStream != null) {
-                            // Example: writing a simple string
-                            String content = buildExportDataString();
-                            outputStream.write(content.getBytes());
-                            outputStream.close();
-                            // File saved successfully
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        // Handle error during file writing
-                    }
-                }
-            }
-        }
     }
 
     @Override

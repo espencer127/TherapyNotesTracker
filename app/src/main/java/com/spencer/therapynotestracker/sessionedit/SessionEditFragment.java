@@ -109,13 +109,11 @@ public class SessionEditFragment extends Fragment {
                         Intent data = result.getData();
 
                         Uri fileUri = data.getData();
-                        // Process the selected file using its URI
-                        Log.d("Main Activity 152", fileUri.toString());
 
                         try {
                             OutputStream outputStream = getContext().getContentResolver().openOutputStream(fileUri);
                             if (outputStream != null) {
-                                PdfDocument pdfDocument = attemptExport(data);
+                                PdfDocument pdfDocument = PdfUtils.buildExportPDFString(getContext(), getView());
 
                                 pdfDocument.writeTo(outputStream);
 
@@ -134,31 +132,6 @@ public class SessionEditFragment extends Fragment {
                     }
                 }
             });
-
-    //TODO put this all in the pdfutils class?
-
-    private PdfDocument attemptExport(Intent intent) {
-        EditText editAgenda = this.getView().findViewById(R.id.edit_agenda);
-        EditText editNotes = this.getView().findViewById(R.id.edit_notes);
-        TextView date = this.getView().findViewById(R.id.view_date);
-        EditText editTherapist = this.getView().findViewById(R.id.edit_therapist);
-
-        String dateDate = date.getText().toString();
-        String newAgenda = editAgenda.getText().toString();
-        String newNotes = editNotes.getText().toString();
-        String newTherapist = editTherapist.getText().toString();
-
-        Session tempSesh = new Session(dateDate, newAgenda, newNotes, newTherapist);
-
-        Uri fileUri = intent.getData();
-
-        // Example: writing a simple string
-        PdfDocument pdfDocument = PdfUtils.buildExportPDFString(this.getContext(), tempSesh);
-
-        return pdfDocument;
-
-    }
-
 
     private void attemptEdit() {
         EditText editAgenda = getView().findViewById(R.id.edit_agenda);

@@ -9,6 +9,8 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
@@ -16,7 +18,20 @@ import com.spencer.therapynotestracker.database.Session;
 
 public class PdfUtils {
 
-    public static PdfDocument buildExportPDFString(Context context, Session sesh) {
+    public static PdfDocument buildExportPDFString(Context context, View view) {
+
+        EditText editAgenda = view.findViewById(R.id.edit_agenda);
+        EditText editNotes = view.findViewById(R.id.edit_notes);
+        TextView date = view.findViewById(R.id.view_date);
+        EditText editTherapist = view.findViewById(R.id.edit_therapist);
+
+        String dateDate = date.getText().toString();
+        String newAgenda = editAgenda.getText().toString();
+        String newNotes = editNotes.getText().toString();
+        String newTherapist = editTherapist.getText().toString();
+
+        Session sesh = new Session(dateDate, newAgenda, newNotes, newTherapist);
+
         // declaring width and height
         // for our PDF file.
         int pageHeight = 1120;
