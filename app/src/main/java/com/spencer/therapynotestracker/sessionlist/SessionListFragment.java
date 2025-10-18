@@ -154,7 +154,7 @@ public class SessionListFragment extends Fragment implements View.OnClickListene
 
         activeSession.selectItem(session);
 
-        Toast.makeText(this.getContext(), activeSession.getSelectedItem().getValue().getAgenda(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getContext(), activeSession.getSelectedItem().getValue().getDate() + " - " + activeSession.getSelectedItem().getValue().getTherapist(), Toast.LENGTH_SHORT).show();
 
     }
 }

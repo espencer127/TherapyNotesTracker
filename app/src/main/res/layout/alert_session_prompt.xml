@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:padding="16dp">
 
     <EditText
@@ -32,10 +33,10 @@
         android:scrollbarStyle="insideInset"
         android:scrollbars="vertical"
         android:gravity="start"
-        android:maxLines="20"
-        android:minLines="5"
-        android:lines="5"
-        android:maxLength="1500"
+        android:maxLines="200"
+        android:minLines="10"
+        android:lines="10"
+        android:maxLength="15000"
 
         android:contentDescription="Session Agenda"/>
 
@@ -50,10 +51,10 @@
         android:scrollbarStyle="insideInset"
         android:scrollbars="vertical"
         android:gravity="start"
-        android:maxLines="20"
-        android:minLines="5"
-        android:lines="5"
-        android:maxLength="1500"
+        android:maxLines="200"
+        android:minLines="10"
+        android:lines="10"
+        android:maxLength="15000"
 
         android:contentDescription="Session Notes"/>
 
