@@ -63,4 +63,19 @@ public class SessionRepository {
         });
         mAllSessions = mSessionDao.getAlphabetizedSessions();
     }
+
+    public void editItemsAgenda(String dateDate, String newAgenda) {
+        SessionRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mSessionDao.updateSessionAgenda(dateDate, newAgenda);
+        });
+        mAllSessions = mSessionDao.getAlphabetizedSessions();
+    }
+
+    public void editItemsNotes(String dateDate, String newNotes) {
+        SessionRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mSessionDao.updateSessionNotes(dateDate, newNotes);
+        });
+        mAllSessions = mSessionDao.getAlphabetizedSessions();
+
+    }
 }

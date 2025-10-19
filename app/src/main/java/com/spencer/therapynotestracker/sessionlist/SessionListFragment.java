@@ -22,14 +22,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spencer.therapynotestracker.MainActivity;
 import com.spencer.therapynotestracker.R;
-import com.spencer.therapynotestracker.SelectListener;
 import com.spencer.therapynotestracker.database.Session;
 import com.spencer.therapynotestracker.databinding.FragmentFirstBinding;
-import com.spencer.therapynotestracker.sessionedit.ActiveSessionViewModel;
+import com.spencer.therapynotestracker.edit.ActiveSessionViewModel;
 
 import java.util.List;
 
-public class SessionListFragment extends Fragment implements View.OnClickListener, SelectListener {
+public class SessionListFragment extends Fragment implements View.OnClickListener {
 
     private FragmentFirstBinding binding;
 
@@ -42,6 +41,38 @@ public class SessionListFragment extends Fragment implements View.OnClickListene
     FloatingActionButton enterButton;
 
     private SessionListAdapter sessionListAdapter;
+
+    private SelectListener selectListener = new SelectListener() {
+        @Override
+        public void onExpandButtonClicked(Session session) {
+            NavHostFragment.findNavController(SessionListFragment.this)
+                    .navigate(R.id.action_FirstFragment_to_SecondFragment);
+
+            activeSession.selectItem(session);
+
+            Toast.makeText(getContext(), activeSession.getSelectedItem().getValue().getDate() + " - " + activeSession.getSelectedItem().getValue().getTherapist(), Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onEditAgendaButtonClicked(Session session) {
+            NavHostFragment.findNavController(SessionListFragment.this)
+                    .navigate(R.id.action_FirstFragment_to_SessionEditAgendaFragment);
+
+            activeSession.selectItem(session);
+
+            Toast.makeText(getContext(), activeSession.getSelectedItem().getValue().getDate() + " - " + activeSession.getSelectedItem().getValue().getTherapist(), Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onEditNotesButtonClicked(Session session) {
+            NavHostFragment.findNavController(SessionListFragment.this)
+                    .navigate(R.id.action_FirstFragment_to_SessionEditNotesFragment);
+
+            activeSession.selectItem(session);
+
+            Toast.makeText(getContext(), activeSession.getSelectedItem().getValue().getDate() + " - " + activeSession.getSelectedItem().getValue().getTherapist(), Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     public View onCreateView(
@@ -75,7 +106,7 @@ public class SessionListFragment extends Fragment implements View.OnClickListene
         super.onViewCreated(view, savedInstanceState);
 
         // Assign sessionlist to SessionAdapter
-        sessionListAdapter = new SessionListAdapter(sessionListViewModel.getSessions().getValue(), this::onItemClicked);
+        sessionListAdapter = new SessionListAdapter(sessionListViewModel.getSessions().getValue(), selectListener); //this::onExpandButtonClicked
 
         // Set the LayoutManager that this RecyclerView will use.
         RecyclerView recyclerView = view.findViewById(R.id.binRecyclerView);
@@ -109,7 +140,6 @@ public class SessionListFragment extends Fragment implements View.OnClickListene
 
     private void promptForSession() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-
 
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogueView = inflater.inflate(R.layout.alert_session_prompt, null);
@@ -147,14 +177,4 @@ public class SessionListFragment extends Fragment implements View.OnClickListene
         builder.show();
     }
 
-    @Override
-    public void onItemClicked(Session session) {
-        NavHostFragment.findNavController(SessionListFragment.this)
-                .navigate(R.id.action_FirstFragment_to_SecondFragment);
-
-        activeSession.selectItem(session);
-
-        Toast.makeText(this.getContext(), activeSession.getSelectedItem().getValue().getDate() + " - " + activeSession.getSelectedItem().getValue().getTherapist(), Toast.LENGTH_SHORT).show();
-
-    }
 }

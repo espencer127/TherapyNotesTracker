@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.spencer.therapynotestracker.R;
-import com.spencer.therapynotestracker.SelectListener;
 import com.spencer.therapynotestracker.database.Session;
 
 import java.util.List;
@@ -34,6 +33,9 @@ public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.
 
         Button myButton;
 
+        Button EditAgendaButton;
+        Button EditNotesButton;
+
         public SessionViewHolder(View itemView) {
             super(itemView);
             date = itemView.findViewById(R.id.sessionDate);
@@ -42,6 +44,9 @@ public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.
             therapist = itemView.findViewById(R.id.sessionTherapist);
 
             myButton = itemView.findViewById(R.id.myButton);
+
+            EditAgendaButton = itemView.findViewById(R.id.EditAgendaButton);
+            EditNotesButton = itemView.findViewById(R.id.EditNotesButton);
         }
     }
 
@@ -63,7 +68,21 @@ public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.
         holder.myButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onItemClicked(sessions.get(holder.getAdapterPosition()));
+                mListener.onExpandButtonClicked(sessions.get(holder.getAdapterPosition()));
+            }
+        });
+
+        holder.EditAgendaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onEditAgendaButtonClicked(sessions.get(holder.getAdapterPosition()));
+            }
+        });
+
+        holder.EditNotesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onEditNotesButtonClicked(sessions.get(holder.getAdapterPosition()));
             }
         });
     }
