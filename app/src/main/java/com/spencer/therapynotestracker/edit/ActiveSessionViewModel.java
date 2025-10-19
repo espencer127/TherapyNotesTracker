@@ -1,4 +1,4 @@
-package com.spencer.therapynotestracker.sessionedit;
+package com.spencer.therapynotestracker.edit;
 
 import android.app.Application;
 
@@ -37,4 +37,7 @@ public class ActiveSessionViewModel extends AndroidViewModel {
         mRepository.edit(session);
     }
 
+    public void editItem(String date, String newAgenda) {
+        mRepository.editItem(date, newAgenda);
+    }
 }

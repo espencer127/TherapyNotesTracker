@@ -22,24 +22,25 @@ public interface SessionDao {
      */
 
 
-        // LiveData is a data holder class that can be observed within a given lifecycle.
-        // Always holds/caches latest version of data. Notifies its active observers when the
-        // data has changed. Since we are getting all the contents of the database,
-        // we are notified whenever any of the database contents have changed.
-        @Query("SELECT * FROM session_table ORDER BY id ASC")
-        LiveData<List<Session>> getAlphabetizedSessions();
+    // LiveData is a data holder class that can be observed within a given lifecycle.
+    // Always holds/caches latest version of data. Notifies its active observers when the
+    // data has changed. Since we are getting all the contents of the database,
+    // we are notified whenever any of the database contents have changed.
+    @Query("SELECT * FROM session_table ORDER BY id ASC")
+    LiveData<List<Session>> getAlphabetizedSessions();
 
-        @Insert(onConflict = OnConflictStrategy.IGNORE)
-        void insert(Session session);
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insert(Session session);
 
-        @Query("DELETE FROM session_table")
-        void deleteAll();
+    @Query("DELETE FROM session_table")
+    void deleteAll();
 
-        @Query("DELETE FROM session_table WHERE date = :date")
-        void delete(String date);
+    @Query("DELETE FROM session_table WHERE date = :date")
+    void delete(String date);
 
-        @Query("UPDATE session_table SET agenda = :newAgenda, notes = :newNotes, therapist = :newTherapist WHERE date = :date")
-        void updateSession(String date, String newAgenda, String newNotes, String newTherapist);
+    @Query("UPDATE session_table SET agenda = :newAgenda, notes = :newNotes, therapist = :newTherapist WHERE date = :date")
+    void updateSession(String date, String newAgenda, String newNotes, String newTherapist);
 
-
+    @Query("UPDATE session_table SET agenda = :newAgenda WHERE date = :date")
+    void updateSession(String date, String newAgenda);
 }

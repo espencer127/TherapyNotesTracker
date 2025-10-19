@@ -1,4 +1,4 @@
-package com.spencer.therapynotestracker.sessionedit;
+package com.spencer.therapynotestracker.edit.session;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,6 +25,7 @@ import com.spencer.therapynotestracker.PdfUtils;
 import com.spencer.therapynotestracker.R;
 import com.spencer.therapynotestracker.database.Session;
 import com.spencer.therapynotestracker.databinding.FragmentSessionEditBinding;
+import com.spencer.therapynotestracker.edit.ActiveSessionViewModel;
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -15,17 +15,30 @@
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SessionEditFragment" />
         <action
+            android:id="@+id/action_FirstFragment_to_SessionEditAgendaFragment"
+            app:destination="@id/SessionEditAgendaFragment" />
+        <action
             android:id="@+id/action_FirstFragment_to_AddFragment"
             app:destination="@id/NewSessionPrompt" />
     </fragment>
     <fragment
         android:id="@+id/SessionEditFragment"
-        android:name="com.spencer.therapynotestracker.sessionedit.SessionEditFragment"
+        android:name="com.spencer.therapynotestracker.edit.session.SessionEditFragment"
         android:label="@string/session_edit_fragment_label"
         tools:layout="@layout/fragment_session_edit">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/SessionEditAgendaFragment"
+        android:name="com.spencer.therapynotestracker.edit.sessionagenda.SessionEditAgendaFragment"
+        android:label="Edit Session Agenda"
+        tools:layout="@layout/fragment_session_agenda_edit">
+
+        <action
+            android:id="@+id/action_SessionEditAgendaFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
     <dialog

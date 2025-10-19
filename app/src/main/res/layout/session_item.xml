@@ -44,16 +44,23 @@
             app:layout_constraintEnd_toStartOf="@id/myButton"
             android:textSize="16sp" />
 
+        <Button
+            android:id="@+id/myButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/expand"/>
 
-
-    <Button
-        android:id="@+id/myButton"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/expand"/>
+        <Button
+            android:id="@+id/EditAgendaButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="Edit Agenda"/>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
