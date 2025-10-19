@@ -6,4 +6,6 @@ public interface SelectListener {
     void onExpandButtonClicked(Session session);
 
     void onEditAgendaButtonClicked(Session session);
+
+    void onEditNotesButtonClicked(Session session);
 }

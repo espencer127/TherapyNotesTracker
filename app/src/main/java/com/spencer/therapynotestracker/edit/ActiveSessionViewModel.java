@@ -37,7 +37,11 @@ public class ActiveSessionViewModel extends AndroidViewModel {
         mRepository.edit(session);
     }
 
-    public void editItem(String date, String newAgenda) {
-        mRepository.editItem(date, newAgenda);
+    public void editItemAgenda(String date, String newAgenda) {
+        mRepository.editItemsAgenda(date, newAgenda);
+    }
+
+    public void editItemNotes(String date, String newNotes) {
+        mRepository.editItemsNotes(date, newNotes);
     }
 }

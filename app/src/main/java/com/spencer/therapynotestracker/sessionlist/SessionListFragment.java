@@ -51,7 +51,6 @@ public class SessionListFragment extends Fragment implements View.OnClickListene
             activeSession.selectItem(session);
 
             Toast.makeText(getContext(), activeSession.getSelectedItem().getValue().getDate() + " - " + activeSession.getSelectedItem().getValue().getTherapist(), Toast.LENGTH_SHORT).show();
-
         }
 
         @Override
@@ -62,8 +61,16 @@ public class SessionListFragment extends Fragment implements View.OnClickListene
             activeSession.selectItem(session);
 
             Toast.makeText(getContext(), activeSession.getSelectedItem().getValue().getDate() + " - " + activeSession.getSelectedItem().getValue().getTherapist(), Toast.LENGTH_SHORT).show();
+        }
 
+        @Override
+        public void onEditNotesButtonClicked(Session session) {
+            NavHostFragment.findNavController(SessionListFragment.this)
+                    .navigate(R.id.action_FirstFragment_to_SessionEditNotesFragment);
 
+            activeSession.selectItem(session);
+
+            Toast.makeText(getContext(), activeSession.getSelectedItem().getValue().getDate() + " - " + activeSession.getSelectedItem().getValue().getTherapist(), Toast.LENGTH_SHORT).show();
         }
     };
 

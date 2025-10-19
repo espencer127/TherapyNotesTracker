@@ -64,9 +64,16 @@ public class SessionRepository {
         mAllSessions = mSessionDao.getAlphabetizedSessions();
     }
 
-    public void editItem(String dateDate, String newAgenda) {
+    public void editItemsAgenda(String dateDate, String newAgenda) {
         SessionRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mSessionDao.updateSession(dateDate, newAgenda);
+            mSessionDao.updateSessionAgenda(dateDate, newAgenda);
+        });
+        mAllSessions = mSessionDao.getAlphabetizedSessions();
+    }
+
+    public void editItemsNotes(String dateDate, String newNotes) {
+        SessionRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mSessionDao.updateSessionNotes(dateDate, newNotes);
         });
         mAllSessions = mSessionDao.getAlphabetizedSessions();
 

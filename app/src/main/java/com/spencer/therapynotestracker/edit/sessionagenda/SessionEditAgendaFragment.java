@@ -1,36 +1,20 @@
 package com.spencer.therapynotestracker.edit.sessionagenda;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.pdf.PdfDocument;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.spencer.therapynotestracker.PdfUtils;
 import com.spencer.therapynotestracker.R;
-import com.spencer.therapynotestracker.database.Session;
 import com.spencer.therapynotestracker.databinding.FragmentSessionAgendaEditBinding;
-import com.spencer.therapynotestracker.databinding.FragmentSessionEditBinding;
 import com.spencer.therapynotestracker.edit.ActiveSessionViewModel;
-import com.spencer.therapynotestracker.edit.session.SessionEditFragment;
-
-import java.io.IOException;
-import java.io.OutputStream;
 
 public class SessionEditAgendaFragment extends Fragment {
 
@@ -78,7 +62,7 @@ public class SessionEditAgendaFragment extends Fragment {
 
         String newAgenda = editAgenda.getText().toString();
 
-        activeSessionViewModel.editItem(date, newAgenda);
+        activeSessionViewModel.editItemAgenda(date, newAgenda);
 
         Toast.makeText(getView().getContext(), "Edited record for " + date, Toast.LENGTH_SHORT).show();
 

@@ -18,6 +18,9 @@
             android:id="@+id/action_FirstFragment_to_SessionEditAgendaFragment"
             app:destination="@id/SessionEditAgendaFragment" />
         <action
+            android:id="@+id/action_FirstFragment_to_SessionEditNotesFragment"
+            app:destination="@id/SessionEditNotesFragment" />
+        <action
             android:id="@+id/action_FirstFragment_to_AddFragment"
             app:destination="@id/NewSessionPrompt" />
     </fragment>
@@ -39,6 +42,16 @@
 
         <action
             android:id="@+id/action_SessionEditAgendaFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/SessionEditNotesFragment"
+        android:name="com.spencer.therapynotestracker.edit.sessionnotes.SessionEditNotesFragment"
+        android:label="Edit Session Notes"
+        tools:layout="@layout/fragment_session_notes_edit">
+
+        <action
+            android:id="@+id/action_SessionEditNotesFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
     <dialog

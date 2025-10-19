@@ -34,6 +34,7 @@ public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.
         Button myButton;
 
         Button EditAgendaButton;
+        Button EditNotesButton;
 
         public SessionViewHolder(View itemView) {
             super(itemView);
@@ -45,6 +46,7 @@ public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.
             myButton = itemView.findViewById(R.id.myButton);
 
             EditAgendaButton = itemView.findViewById(R.id.EditAgendaButton);
+            EditNotesButton = itemView.findViewById(R.id.EditNotesButton);
         }
     }
 
@@ -74,6 +76,13 @@ public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.
             @Override
             public void onClick(View view) {
                 mListener.onEditAgendaButtonClicked(sessions.get(holder.getAdapterPosition()));
+            }
+        });
+
+        holder.EditNotesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onEditNotesButtonClicked(sessions.get(holder.getAdapterPosition()));
             }
         });
     }

@@ -42,5 +42,8 @@ public interface SessionDao {
     void updateSession(String date, String newAgenda, String newNotes, String newTherapist);
 
     @Query("UPDATE session_table SET agenda = :newAgenda WHERE date = :date")
-    void updateSession(String date, String newAgenda);
+    void updateSessionAgenda(String date, String newAgenda);
+
+    @Query("UPDATE session_table SET notes = :newNotes WHERE date = :date")
+    void updateSessionNotes(String date, String newNotes);
 }
