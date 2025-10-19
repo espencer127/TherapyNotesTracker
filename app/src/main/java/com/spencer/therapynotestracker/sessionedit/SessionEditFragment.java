@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,11 +51,6 @@ public class SessionEditFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        binding.buttonSecond.setOnClickListener(v ->
-                NavHostFragment.findNavController(SessionEditFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment)
-        );
 
         binding.buttonSaveSessionEdit.setOnClickListener(v -> {
                 attemptEdit();
